@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Raport zadań</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body class="wrapperRaport">
+    <div class="headRaport">
+        <h1 class="report-title">Raport zadań</h1>
+        <p id="rangeText" class="report-range"></p>
+
+    </div>
+
+
+    <table class="report-table" id="taskTable">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Godzina</th>
+                <th>Tytuł</th>
+                <th>Opis</th>
+                <th>Wykonane</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script type="module">
+        import { supabase } from "../js/core/auth.js";
+
+        await supabase.auth.getSession();
+
+        const params = new URLSearchParams(window.location.search);
+        const dateFrom = params.get("from");
+        const dateTo = params.get("to");
+
+        document.getElementById("rangeText").textContent =
+            `Za okres: ${dateFrom} → ${dateTo}`;
+
+        const { data: sessionData } = await supabase.auth.getSession();
+        const user = sessionData.session?.user;
+
+        if (!user) {
+            alert("Brak sesji użytkownika");
+            throw new Error("Brak sesji");
+        }
+
+        const { data: tasks, error } = await supabase
+            .from("tasks")
+            .select("*")
+            .eq("user_id", user.id)
+            .gte("date", dateFrom)
+            .lte("date", dateTo)
+            .order("date", { ascending: true });
+
+        if (error) console.error(error);
+
+        const tbody = document.querySelector("#taskTable tbody");
+
+        if (tasks) {
+            tasks.forEach(t => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                <td>${t.date}</td>
+                <td>${t.time || ""}</td>
+                <td>${t.title}</td>
+                <td>${t.description || ""}</td>
+                <td>${t.completed ? "✔" : "—"}</td>
+            `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+
+</body>
+
+</html>

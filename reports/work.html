@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Raport zmian</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body class="wrapperRaport">
+
+    <div class="headRaport">
+        <h1 class="report-title">Raport zmian</h1>
+        <p id="rangeText" class="report-range"></p>
+    </div>
+
+
+
+    <table class="report-table" id="workTable">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Od</th>
+                <th>Do</th>
+                <th>Godziny</th>
+                <th>Miejsce</th>
+                <th>Osoba</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="report-footer">
+        <p>Razem godzin: <span id="totalHours">0</span></p>
+    </div>
+
+    <script type="module">
+        import { supabase } from "../js/core/auth.js";
+
+        // Ждём восстановления сессии (важно!)
+        await supabase.auth.getSession();
+
+        // -----------------------
+        // Pobieranie zakresu dat
+        // -----------------------
+        const params = new URLSearchParams(window.location.search);
+        const dateFrom = params.get("from");
+        const dateTo = params.get("to");
+
+        document.getElementById("rangeText").textContent =
+            `Za okres: ${dateFrom} → ${dateTo}`;
+
+        // -----------------------
+        // Pobranie usera
+        // -----------------------
+        const { data: sessionData } = await supabase.auth.getSession();
+        const user = sessionData.session?.user;
+
+        if (!user) {
+            alert("Brak sesji użytkownika");
+            throw new Error("Brak sesji");
+        }
+
+        // -----------------------
+        // Pobranie zmian
+        // -----------------------
+        const { data: work, error } = await supabase
+            .from("work_entries")
+            .select("*")
+            .eq("user_id", user.id)
+            .gte("date", dateFrom)
+            .lte("date", dateTo)
+            .order("date", { ascending: true });
+
+        if (error) {
+            console.error("Błąd:", error);
+            alert("Błąd pobierania danych!");
+        }
+
+        const tbody = document.querySelector("#workTable tbody");
+        let total = 0;
+
+        if (work) {
+            work.forEach(w => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                <td>${w.date}</td>
+                <td>${w.start_time?.slice(0, 5) || ""}</td>
+                <td>${w.end_time?.slice(0, 5) || ""}</td>
+                <td>${w.total_hours}</td>
+                <td>${w.place || ""}</td>
+                <td>${w.partner || ""}</td>
+            `;
+                total += Number(w.total_hours);
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.getElementById("totalHours").textContent = total.toFixed(2);
+    </script>
+
+</body>
+
+</html>

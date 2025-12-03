@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Work Calendar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ========================================================= -->
+    <!-- 1) SPLASH SCREEN -->
+    <!-- ========================================================= -->
+    <div id="splashScreen" class="splash-screen">
+        <div class="splash-content">
+            <!-- Turquoise Linear SVG Calendar Icon -->
+            <svg class="splash-logo" width="120" height="120" viewBox="0 0 120 120" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="20" width="100" height="85" rx="12" stroke="#2EC4B6" stroke-width="6" />
+                <path d="M10 45H110" stroke="#2EC4B6" stroke-width="6" stroke-linecap="round" />
+                <path d="M40 10V35" stroke="#2EC4B6" stroke-width="6" stroke-linecap="round" />
+                <path d="M80 10V35" stroke="#2EC4B6" stroke-width="6" stroke-linecap="round" />
+                <circle cx="40" cy="65" r="7" fill="#2EC4B6" />
+                <circle cx="80" cy="65" r="7" fill="#2EC4B6" />
+                <circle cx="40" cy="90" r="7" fill="#2EC4B6" />
+                <circle cx="80" cy="90" r="7" fill="#2EC4B6" />
+            </svg>
+
+            <h1 class="splash-title">Work Calendar</h1>
+            <p class="splash-sub">powered by Supabase</p>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 2) LOGIN / REGISTER FORM -->
+    <!-- ========================================================= -->
+    <div id="authScreen" class="auth-screen hidden">
+
+        <div class="auth-box">
+
+            <!-- LOGIN -->
+            <div id="loginForm">
+                <h2>Logowanie</h2>
+
+                <label>Email</label>
+                <input id="loginEmail" type="email" placeholder="email@example.com">
+
+                <label>Hasło</label>
+                <input id="loginPassword" type="password" placeholder="••••••••">
+
+                <button id="loginBtn" class="btn-primary">Zaloguj</button>
+
+                <p class="switch-auth">
+                    Nie masz konta?
+                    <span id="toRegister">Zarejestruj się</span>
+                </p>
+            </div>
+
+            <!-- REGISTER -->
+            <div id="registerForm" class="hidden">
+                <h2>Rejestracja</h2>
+
+                <label>Email</label>
+                <input id="regEmail" type="email" placeholder="email@example.com">
+
+                <label>Hasło</label>
+                <input id="regPassword" type="password" placeholder="••••••••">
+
+                <label>Powtórz hasło</label>
+                <input id="regPassword2" type="password" placeholder="••••••••">
+
+                <button id="registerBtn" class="btn-primary">Utwórz konto</button>
+
+                <p class="switch-auth">
+                    Masz już konto?
+                    <span id="toLogin">Zaloguj się</span>
+                </p>
+            </div>
+
+            <!-- Ошибки -->
+            <p id="authError" class="error-message"></p>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 3) CALENDAR MAIN SCREEN -->
+    <!-- ========================================================= -->
+    <div id="calendarScreen" class="calendar-screen hidden">
+
+        <!-- HEADER -->
+        <header class="header">
+
+            <div class="header-row-1">
+                <button id="prevMonth" class="nav-btn">
+                    <img src="icons/arrow-left.svg">
+                </button>
+
+                <h1 id="monthTitle"></h1>
+
+                <button id="nextMonth" class="nav-btn">
+                    <img src="icons/arrow-right.svg">
+                </button>
+            </div>
+
+            <div class="header-row-2">
+                <button id="exportBtn" class="action-btn">
+                    <img src="icons/export.svg"> Eksport
+                </button>
+
+                <button id="reportsBtn" class="action-btn hidden">
+                    <img src="icons/report.svg"> Raporty
+                </button>
+            </div>
+
+            <div class="header-row-3">
+                <span id="userEmail"></span>
+
+                <button id="logoutBtn" class="logout-btn">Wyloguj</button>
+
+                <button id="darkToggle" class="theme-btn">
+                    <img id="themeIcon" src="icons/moon.svg">
+                </button>
+            </div>
+
+        </header>
+
+        <div class="weekday-grid"></div>
+        <div id="calendar" class="calendar-grid"></div>
+        <div id="monthSummary" class="month-summary"></div>
+
+        <!-- FAB MENU -->
+        <div id="fabMenu" class="fab-menu">
+            <img src="icons/plus.svg">
+        </div>
+
+        <div id="fabOptions" class="fab-options hidden">
+            <button class="fab-option" id="fabAddWork">Dodaj zmianę</button>
+            <button class="fab-option" id="fabAddTask">Dodaj zadanie</button>
+            <button class="fab-option" id="fabReports">Raporty</button>
+        </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- 4) MODALS -->
+    <!-- ========================================================= -->
+
+    <!-- MODAL: DAY DETAILS -->
+    <dialog id="dayModal" class="modal-window">
+
+        <div class="day-modal-header">
+            <div id="dayTitle" class="day-title"></div>
+            <button id="dayCloseBtn" class="day-modal-close"
+                onclick="document.getElementById('dayModal').close()">x</button>
+        </div>
+
+        
+        <div class="day-modal-section">
+            <p><b>Zadania:</b></p>
+            <div id="taskDayIndicator" class="task-circle"></div>
+            <div id="dayTasksContainer"></div>
+        </div>
+
+        <div class="day-modal-section">
+            <h4>Zmiana:</h4>
+
+            <!-- gdy brak zmiany -->
+            <p id="shiftNone" class="empty-info hidden">Brak zmiany</p>
+
+            <!-- dane zmiany -->
+            <p id="shiftTime" class="hidden"></p>
+            <p id="shiftPlace" class="hidden"></p>
+            <p id="shiftPartner" class="hidden"></p>
+
+            <!-- przyciski gdy zmiana istnieje -->
+            <button id="dayEditWork" class="btn-primary hidden">Edytuj zmianę</button>
+            <button id="dayDeleteWork" class="btn-danger hidden">Usuń zmianę</button>
+        </div>
+
+
+        <div class="day-modal-actions">
+            <button id="dayAddTask" class="btn-primary">Dodaj zadanie</button>
+        </div>
+
+    </dialog>
+
+
+
+    <!-- MODAL: ADD TASK -->
+    <dialog id="taskModal" class="modal-window">
+        <h2>Dodaj zadanie</h2>
+
+        <label>Data</label>
+        <input id="taskDate" type="date">
+
+        <label>Godzina</label>
+        <input id="taskTime" type="text" placeholder="07:00" maxlength="5">
+
+        <label>Tytuł</label>
+        <input id="taskTitle" type="text">
+
+        <label>Opis</label>
+        <textarea id="taskDesc"></textarea>
+
+        <label>
+            <input id="taskDone" type="checkbox"> Wykonane
+        </label>
+
+        <button id="saveTaskBtn" class="btn-primary">Zapisz</button>
+        <button onclick="document.getElementById('taskModal').close()" class="close-btn">Zamknij</button>
+    </dialog>
+
+
+    <!-- MODAL: ADD WORK -->
+    <dialog id="workModal" class="modal-window">
+        <h2>Dodaj zmianę</h2>
+
+        <label>Data</label>
+        <input id="workDate" type="date">
+
+        <label>Od</label>
+        <input id="workStart" type="text" placeholder="07:00" maxlength="5">
+
+        <label>Do</label>
+        <input id="workEnd" type="text" placeholder="16:00" maxlength="5">
+
+        <label>Miejsce</label>
+        <input id="workPlace" type="text">
+
+        <label>Osoba</label>
+        <input id="workPartner" type="text">
+
+        <button id="saveWorkBtn" class="btn-primary">Zapisz</button>
+        <button onclick="document.getElementById('workModal').close()" class="close-btn">Zamknij</button>
+    </dialog>
+
+    <!-- MODAL: RAPORTY -->
+    <dialog id="reportModal" class="modal-window small">
+        <h2>Raporty</h2>
+
+        <div id="reportsContent" class="report-content">
+            <!-- Сюда будет вставляться статистика -->
+        </div>
+        <button id="reportWorkBtn" class="btn-primary">Raport zmian</button>
+        <button id="reportTaskBtn" class="btn-secondary">Raport zadań</button>
+
+
+        <button onclick="document.getElementById('reportModal').close()" class="close-btn">Zamknij</button>
+    </dialog>
+
+    <!-- MODAL: EXPORT RANGE -->
+    <dialog id="exportModal" class="modal-window small">
+        <h2>Eksport Excel</h2>
+
+        <label>Od</label>
+        <input id="exportFrom" type="date">
+
+        <label>Do</label>
+        <input id="exportTo" type="date">
+
+        <button id="exportConfirmBtn" class="btn-primary">Eksportuj</button>
+        <button onclick="document.getElementById('exportModal').close()" class="close-btn">Zamknij</button>
+    </dialog>
+
+    <!-- JS -->
+    <!-- ========================= -->
+    <!--  JAVASCRIPT MODULES ORDER  -->
+    <!-- ========================= -->
+
+    <script type="module" src="js/core/db.js"></script>
+    <script type="module" src="js/core/auth.js"></script>
+
+    <script type="module" src="js/ui/modals-add.js"></script>
+    <script type="module" src="js/ui/modal-day.js"></script>
+
+    <script type="module" src="js/ui/calendar.js"></script>
+    <script type="module" src="js/ui/reports.js"></script>
+    <script type="module" src="js/ui/export.js"></script>
+
+    <!-- MAIN APP (завершает и запускает всё) -->
+    <script type="module" src="js/app.js"></script>
+
+</body>
+
+</html>
