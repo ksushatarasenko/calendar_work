@@ -10,14 +10,14 @@
 
 import { supabase } from "./auth.js";
 
-let monthCache = {}; 
+let monthCache = {};
 // monthCache["2025-05"] = {...data}
 
 /* =========================================================
    HELPER: key для кэша
    ========================================================= */
 function getKey(year, month) {
-    return `${year}-${String(month+1).padStart(2, "0")}`;
+    return `${year}-${String(month + 1).padStart(2, "0")}`;
 }
 
 /* =========================================================
@@ -31,8 +31,14 @@ export async function getMonthData(year, month) {
         return monthCache[key];
     }
 
-    const monthStart = `${year}-${String(month+1).padStart(2, "0")}-01`;
-    const monthEnd = `${year}-${String(month+1).padStart(2, "0")}-31`;
+    const monthStart = `${year}-${String(month + 1).padStart(2, "0")}-01`;
+
+    // находим реальное число дней в месяце
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const monthEnd = `${year}-${String(month + 1).padStart(2, "0")}-${String(daysInMonth).padStart(2, "0")}`;
+
+
 
     /* -----------------------------------------------
        TASKS (1 запрос)
@@ -158,7 +164,7 @@ export async function deleteTask(id) {
 /* =========================================================
    WORK — CRUD
    ========================================================= */
-   
+
 
 
 export async function getWorkByDate(dateISO) {
@@ -177,7 +183,7 @@ export function calcTotalHours(start_time, end_time) {
     const [eh, em] = end_time.split(":").map(Number);
 
     const start = sh + (sm || 0) / 60;
-    const end   = eh + (em || 0) / 60;
+    const end = eh + (em || 0) / 60;
 
     const diff = end - start;
     if (!isFinite(diff) || diff < 0) return null;   // на всякий случай
@@ -196,12 +202,12 @@ function calcWorkHours(start, end) {
 export async function insertWork(obj) {
     // 1) Берём текущего пользователя
     const { data: session } = await supabase.auth.getUser();
-     // === Вычисляем total_hours ===
-    
+    // === Вычисляем total_hours ===
+
     const payload = {
         ...obj,
         user_id: session.user.id,// 👈 ОБЯЗАТЕЛЬНО для RLS-политик
-        total_hours: calcTotalHours(obj.start_time, obj.end_time),      
+        total_hours: calcTotalHours(obj.start_time, obj.end_time),
     };
 
     // 2) Пишем в ту же таблицу, что и раньше (оставь своё имя таблицы!)
@@ -223,11 +229,11 @@ export async function updateWork(id, obj) {
     const { data, error } = await supabase
         .from("work_entries")
         .update({
-            date:       obj.date,
+            date: obj.date,
             start_time: obj.start_time,
-            end_time:   obj.end_time,
-            place:      obj.place,
-            partner:    obj.partner,
+            end_time: obj.end_time,
+            place: obj.place,
+            partner: obj.partner,
             total_hours
         })
         .eq("id", id)
