@@ -260,37 +260,52 @@ body.dark .theme-btn {
 
 /* ---------- MOBILE ADAPTATION ---------- */
 
+/* ===== MOBILE HEADER FIX ===== */
 @media (max-width: 600px) {
-    .header {
-        padding: 16px;
-        border-radius: 18px;
+
+    header {
+        padding: 8px 0 4px;
+        gap: 6px;
     }
 
-    .header-row-1 {
-        flex-direction: column;
+    .month-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+
+        margin-top: 0;
+        margin-bottom: 6px;
+    }
+
+    .month-title {
+        font-size: 20px;
+    }
+
+    .month-arrow {
+        width: 36px;
+        height: 36px;
+    }
+
+    /* Кнопки Экспорт/Рапорты */
+    .header-buttons {
         gap: 8px;
     }
 
-    #monthTitle {
-        font-size: 26px;
+    .header-buttons .btn-primary,
+    .header-buttons .btn-secondary {
+        padding: 8px 14px;
+        font-size: 14px;
     }
 
-    .header-row-2 {
-        flex-direction: column;
-        gap: 10px;
+    /* Кнопка Wyloguj */
+    .logout-btn {
+        font-size: 14px;
+        padding: 6px 14px;
     }
 
-    .action-btn {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .header-row-3 {
-        justify-content: center;
-        gap: 10px;
-    }
 }
-
+/*  */
 .weekday-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
