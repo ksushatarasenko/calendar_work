@@ -71,10 +71,13 @@ body {
     font-family: -apple-system, 'Inter', 'Segoe UI', Roboto, sans-serif;
     transition: background 0.25s ease, color 0.25s ease;
     -webkit-tap-highlight-color: transparent;
+     max-width: 1100px;
+    margin: 0 auto;
 }
 
 button {
     cursor: pointer;
+    
 }
 
 .hidden {
@@ -87,59 +90,83 @@ button {
 
 .header {
     max-width: 1100px;
-    margin: 10px auto;
-    padding: 0 12px;
+    margin: 0 auto;
+    padding: 12px 18px 22px;
+    border-radius: 26px;
+
+    background: var(--day-bg);
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
 }
 /* ---------- ROW 1: стрелки + месяц ---------- */
 .header-row-1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-}
-
-#monthTitle {
-    margin: 0;
-    font-size: 32px;
-    font-weight: 700;
+    gap: 18px;
 }
 
 .nav-btn {
-    border: none;
-    background: rgba(0,0,0,0.06);
-    padding: 6px 10px;
-    border-radius: 10px;
-    cursor: pointer;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+
+    border: 1px solid var(--border-color);
+    background: var(--bg-color);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: 0.15s;
 }
 
 .nav-btn img {
-    width: 22px;
-    height: 22px;
+    width: 18px;
+}
+
+.nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    border-color: var(--accent);
+}
+
+#monthTitle {
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0;
 }
 /* ---------- ROW 2: кнопки Ekport / Raporty ---------- */
 .header-row-2 {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 14px;
     flex-wrap: wrap;
+    margin-top: 6px;
 }
 
 .action-btn {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 6px;
-    background: #39d0c1;
-    color: white;
+    gap: 8px;
+
+    padding: 10px 20px;
+    border-radius: 14px;
     border: none;
-    border-radius: 10px;
-    padding: 8px 14px;
-    font-size: 14px;
+
+    background: var(--accent);
+    color: white;
     font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
+    font-size: 15px;
+
+    box-shadow: 0 12px 24px rgba(46,196,182,0.35);
+    transition: 0.15s;
 }
 
 .action-btn img {
@@ -148,66 +175,100 @@ button {
 }
 
 .action-btn:hover {
-    background: #2ab3a7;
+    background: #26b0a1;
+    transform: translateY(-1px);
 }
-//* ---------- ROW 3: email + logout + theme ---------- */
+/* ---------- ROW 3: email + logout + theme ---------- */
 .header-row-3 {
     display: flex;
-    align-items: center;
     justify-content: flex-end;
-    gap: 12px;
-    font-size: 14px;
+    align-items: center;
+    gap: 14px;
     flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+#userEmail {
+    font-size: 14px;
+    opacity: 0.85;
 }
 
 .logout-btn {
-    background: #eee;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 6px 10px;
-    cursor: pointer;
+    padding: 7px 14px;
+    font-size: 14px;
+
+    background: rgba(0,0,0,0.05);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+
+    transition: 0.15s;
+}
+
+.logout-btn:hover {
+    background: rgba(0,0,0,0.08);
 }
 
 .theme-btn {
-    background: rgba(0,0,0,0.07);
-    border: none;
-    padding: 6px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
-    cursor: pointer;
+
+    background: rgba(0,0,0,0.05);
+    border: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: 0.15s;
 }
 
 .theme-btn img {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+}
+
+.theme-btn:hover {
+    background: rgba(0,0,0,0.08);
+    transform: translateY(-1px);
 }
 
 /* ---------- DARK MODE ---------- */
 
-body.dark .nav-btn {
-    background: rgba(255,255,255,0.12);
+body.dark .header {
+    background: #262626;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
-body.dark .action-btn {
-    background: #3ed8c8;
+body.dark .nav-btn {
+    background: #1f1f1f;
+    border-color: #444;
+}
+
+body.dark .nav-btn:hover {
+    border-color: var(--accent);
 }
 
 body.dark .logout-btn {
-    background: rgba(255,255,255,0.15);
-    color: white;
-    border-color: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.2);
+    color: #fff;
 }
 
 body.dark .theme-btn {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.12);
 }
 
 /* ---------- MOBILE ADAPTATION ---------- */
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
+    .header {
+        padding: 16px;
+        border-radius: 18px;
+    }
 
     .header-row-1 {
         flex-direction: column;
-        gap: 6px;
+        gap: 8px;
     }
 
     #monthTitle {
@@ -216,37 +277,19 @@ body.dark .theme-btn {
 
     .header-row-2 {
         flex-direction: column;
-        gap: 6px;
+        gap: 10px;
     }
 
     .action-btn {
         width: 100%;
         justify-content: center;
-        padding: 12px;
     }
 
     .header-row-3 {
         justify-content: center;
         gap: 10px;
     }
-
-    #userEmail {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 4px;
-    }
-
-    .logout-btn {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .theme-btn {
-        margin: 0 auto;
-    }
 }
-
-/*  */
 
 .weekday-grid {
     display: grid;
@@ -260,67 +303,78 @@ body.dark .theme-btn {
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-    padding: 8px;
-    opacity: 0;
+    gap: 12px;
+    padding: 10px 6px;
+
     animation: fadeIn 0.35s ease forwards;
 }
 
-/* =========================================================
-   3. CALENDAR CELLS
-   ========================================================= */
-
+/* Одна клетка дня */
 .calendar-day {
     background: var(--day-bg);
     color: var(--day-text);
-    padding: 8px 6px;
-    min-height: 75px;
-    border-radius: var(--radius);
+    border-radius: 18px;
+
+    min-height: 115px;
+    min-width: 50px;
+
+    padding: 12px 10px;
+    box-shadow: 2px 8px 18px rgba(0,0,0,0.06);
+    transition: 0.2s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: var(--shadow);
-    transition: 0.2s;
 }
 
+/* Hover */
 .calendar-day:hover {
-    transform: translateY(-2px);
+    transform: translateY(-5px);
+    box-shadow: 0 14px 22px rgba(0,0,0,0.10);
 }
 
+/* Сегодня */
 .calendar-day.today {
     background: var(--accent-soft);
-    border: 1px solid var(--accent);
-    color: var(--accent);
+    border: 2px solid var(--accent);
 }
 
+/* День из прошлого/следующего месяца */
 .calendar-day.disabled {
+    opacity: 0.4;
     background: var(--disabled-bg);
     color: var(--disabled-text);
-    cursor: default;
-    opacity: 0.65;
 }
 
-/* day number */
+/* Число дня */
 .day-number {
-    text-align: left;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 700;
-    margin-bottom: 4px;
-}
-
-/* work meta */
-.day-meta {
-    font-size: 12px;
     color: var(--text-color);
 }
 
-/* task indicator */
+/* Текст внутри (часы, место) */
+.day-meta {
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.25;
+    color: var(--subtle-text);
+
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    min-height: 82px; /* фиксированная зона */
+}
+
+/* Индикатор задачи */
 .task-indicator {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    /* margin-bottom: 2px; */
-    margin-left: 80%;
+
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
 }
 
 .task-indicator.green {
@@ -328,11 +382,14 @@ body.dark .theme-btn {
 }
 
 .task-indicator.grey {
-   background-color: var(--task-grey);
+    background-color: var(--task-grey);
 }
-
+/* Позиционируем индикатор */
+.calendar-day {
+    position: relative;
+}
 /* slide animations */
-.slide-left {
+/* .slide-left {
     transform: translateX(-40px);
     opacity: 0;
 }
@@ -340,13 +397,60 @@ body.dark .theme-btn {
 .slide-right {
     transform: translateX(40px);
     opacity: 0;
-}
+} */
 
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0); }
 }
+/* =========================================================
+   MOBILE ADAPTATION
+   ========================================================= */
 
+@media (max-width: 768px) {
+    .calendar-grid {
+        gap: 8px;
+        padding: 4px;
+    }
+
+    .calendar-day {
+        min-height: 95px;
+        border-radius: 16px;
+        padding: 10px 8px;
+    }
+
+    .day-number {
+        font-size: 16px;
+    }
+
+    .day-meta {
+        font-size: 12px;
+    }
+}
+
+/* Маленькие устройства */
+@media (max-width: 480px) {
+
+    .calendar-day {
+        min-height: 85px;
+        padding: 9px 6px;
+    }
+
+    .day-number {
+        font-size: 15px;
+    }
+
+    .day-meta {
+        font-size: 11px;
+    }
+
+    .task-indicator {
+        width: 10px;
+        height: 10px;
+        bottom: 6px;
+        right: 6px;
+    }
+}
 
 /* =========================================================
    4. MODALS — BASE
@@ -457,20 +561,125 @@ body.dark .theme-btn {
    ========================================================= */
 
 .auth-screen {
-    padding: 20px;
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(15, 23, 42, 0.55);      /* полупрозрачный тёмный фон */
+    backdrop-filter: blur(4px);              /* лёгкий blur */
+    z-index: 100;
+
+    /* если вдруг что-то наследуется */
+    padding: 0;
 }
 
+/* Карточка логина */
 .auth-box {
     background: var(--day-bg);
-    padding: 20px;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    color: var(--text-color);
+
+    padding: 24px 28px;
+    border-radius: 24px;
+
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.55); /* мягкое свечение вокруг */
+    max-width: 380px;
+    width: min(380px, 90vw);
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+/* Заголовок “Вход / Logowanie” */
+.auth-box h2 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 700;
+}
+/* Подписи к полям */
+.auth-box label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 4px;
 }
 
+/* Поля ввода */
 .auth-box input {
     width: 100%;
-    margin-bottom: 12px;
-    padding: 8px;
+    padding: 9px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    margin-bottom: 10px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.auth-box input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(46, 196, 182, 0.25);
+    background: #ffffff;
+}
+/* Кнопка “Войти / Zaloguj” и “Utwórz konto” — в нашей гамме */
+.auth-box .btn-primary {
+    width: 100%;
+    border-radius: 999px;
+    border: none;
+
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 10px 0;
+
+    margin-top: 4px;
+
+    box-shadow: 0 10px 25px rgba(46, 196, 182, 0.45);
+    transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s;
+}
+
+.auth-box .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 32px rgba(46, 196, 182, 0.55);
+    background: #26b0a1; /* чуть темнее акцент */
+}
+
+.auth-box .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 16px rgba(46, 196, 182, 0.4);
+}
+
+/* Переключение "нет аккаунта / уже есть аккаунт" */
+.switch-auth {
+    margin-top: 6px;
+    font-size: 13px;
+    text-align: center;
+    color: var(--subtle-text);
+}
+
+.switch-auth span {
+    color: var(--accent);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.switch-auth span:hover {
+    text-decoration: underline;
+}
+
+/* Немного адаптива для очень маленьких экранов */
+@media (max-width: 480px) {
+    .auth-box {
+        padding: 18px 16px;
+        border-radius: 18px;
+        max-width: 320px;
+    }
+
+    .auth-box h2 {
+        font-size: 20px;
+    }
 }
 
 /* =========================================================
