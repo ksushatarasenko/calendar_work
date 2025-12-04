@@ -90,12 +90,16 @@ export async function authRegister(email, password) {
 // LOGOUT
 // ========================================================================
 export async function authLogout() {
-    console.log("=== LOGOUT ===");
+    console.log("=== LOGOUT FUNCTION CALLED ===");
 
     const { error } = await supabase.auth.signOut();
-    console.log("[LOGOUT] Error:", error);
-}
 
+    if (error) {
+        console.error("❌ LOGOUT ERROR:", error);
+    } else {
+        console.log("✅ LOGOUT SUCCESS!");
+    }
+}
 
 // ========================================================================
 // PROFILE HANDLING
