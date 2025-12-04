@@ -355,7 +355,7 @@ body.dark .theme-btn {
 /* Текст внутри (часы, место) */
 .day-meta {
     margin-top: 6px;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.25;
     color: var(--subtle-text);
 
@@ -363,9 +363,12 @@ body.dark .theme-btn {
     flex-direction: column;
     gap: 2px;
 
-    min-height: 82px; /* фиксированная зона */
+    min-height: 70%; /* фиксированная зона */
 }
-
+/* Если строки всего одна — ровно центрируем относительно области */
+.day-meta > div {
+    flex-shrink: 0;
+}
 /* Индикатор задачи */
 .task-indicator {
     width: 12px;
@@ -453,108 +456,387 @@ body.dark .theme-btn {
 }
 
 /* =========================================================
-   4. MODALS — BASE
+   4.1 DAY CONTENT — Часы, Место, С кем, Задачи
+   ========================================================= */
+  
+
+.modal-card {
+    background: var(--day-bg);
+    padding: 14px 16px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+
+    /* мягкая объемная тень */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+    transition: 0.2s ease;
+}
+
+.modal-card:hover {
+    box-shadow: 0 12px 28px rgba(0,0,0,0.16);
+}
+
+/* Стиль одной строки внутри дня */
+.day-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--subtle-text);
+}
+
+/* Иконка */
+.day-meta-row .icon {
+    width: 14px;
+    height: 14px;
+    opacity: 0.8;
+}
+
+/* Смена (Shift) — выделение */
+.shift-box {
+    background: rgba(46,196,182,0.12); /* мягкая бирюза */
+    padding: 4px 6px;
+    border-radius: 10px;
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 12px;
+    color: var(--text-color);
+    line-height: 1.2;
+}
+
+/* Задачи внутри дня */
+.task-row-mini {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 4px;
+    font-size: 12px;
+}
+
+/* чекбокс: выполнено */
+.task-done-mini {
+    width: 12px;
+    height: 12px;
+}
+
+/* Заголовок задачи */
+.task-title-mini {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 80px;
+}
+
+/* ограничиваем количество задач в одной клетке */
+.calendar-day .task-row-mini:nth-child(n+3) {
+    opacity: 0.6;
+    font-style: italic;
+}
+
+/* =========================================================
+   MOBILE ADAPTATION
+   ========================================================= */
+
+@media (max-width: 600px) {
+    .shift-box {
+        font-size: 11px;
+    }
+    .task-title-mini {
+        max-width: 60px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   4. MODALS — BASE / БАЗА МОДАЛОК
    ========================================================= */
 
 .modal-window {
-    background: var(--modal-bg);
-    color: var(--modal-text);
+    background: var(--day-bg);
+    color: var(--text-color);
     border: none;
-    border-radius: var(--radius);
-    padding: 18px;
-    width: 400px;
-    max-width: 95%;
-    box-shadow: var(--shadow);
-    transition: 0.25s;
-    flex-direction: column;
-    gap: 5px;
-    position: absolute;
-    top: 30%;
-    left: 30%;
-    /* display: flex; */
-    
+    border-radius: 20px;
+    padding: 26px 28px 32px;
+    width: 420px;
+    max-width: 90%;
+    box-shadow:
+        0 25px 55px rgba(0,0,0,0.25),
+        0 0 0 100vmax rgba(0,0,0,0.40);
+    position: relative;
+
+    animation: modalIn .25s ease;
+}
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
 }
 
-.modal-window::backdrop {
-    background: rgba(0,0,0,0.35);
-    backdrop-filter: blur(2px);
+dialog[open] {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: auto;     /* <<< центрирование */
 }
+dialog.modal-window {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 
 @keyframes modalIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: scale(.96) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.modal-window {
+/* .modal-window {
     animation: modalIn .25s ease;
 }
 
 .close-btn {
     margin-top: 10px;
+} */
+/* ЗАГОЛОВОК */
+.modal-title {
+    margin: 0 0 15px;
+    font-size: 22px;
+    font-weight: 700;
+}
+/* КРЕСТИК */
+.modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+
+    background: #fff;
+    border: none;
+    font-size: 20px;
+    width: 32px;
+    height: 32px;
+
+    border-radius: 50%;
+    color: #d9534f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    cursor: pointer;
+
+    transition: .15s;
+}
+.modal-close:hover {
+    transform: scale(0.88);
+    background: #ffecec;
+}
+.modal-close:focus {
+    outline: none !important;
+    border: none !important;
+}
+/* ПОЛЯ (Labels + Inputs) */
+/* Обёртка */
+.modal-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+/* Заголовок поля */
+.modal-label {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+/* Инпуты и textarea */
+.modal-input {
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    font-size: 16px;
+
+    box-shadow:
+        0 1px 5px rgba(0,0,0,0.07),
+        inset 0 2px 3px rgba(255,255,255,0.9);
+
+    transition: 0.2s;
+}
+
+.modal-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(46,196,182,0.3);
+    outline: none;
+}
+
+.modal-textarea {
+    height: 80px;
+    resize: none;
+}
+/* Чекбокс */
+.modal-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+    font-size: 16px;
+}
+/* Кнопка “Сохранить” */
+.modal-save-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 12px 14px;
+    border-radius: 14px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+
+    width: 100%;
+
+    box-shadow: 0 4px 12px rgba(46,196,182,0.35);
+    transition: .2s;
+}
+.modal-save-btn:hover {
+    background:rgb(66, 197, 175) ;
 }
 
 /* =========================================================
-   5. MODAL-DAY — TASKS & WORK
+   REPORT MODAL — ОБНОВЛЁННОЕ МОДАЛЬНОЕ ОКНО
    ========================================================= */
 
-.day-title {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 12px;
-}
-
-.day-modal-section {
-    margin-bottom: 14px;
-}
-
-.task-row {
-    display: grid;
-    grid-template-columns: 30px 1fr 26px 26px;
-    align-items: center;
+.modal-window {
     background: var(--day-bg);
-    padding: 6px 8px;
-    border-radius: var(--radius);
-    transition: 0.15s;
-    box-shadow: var(--shadow);
-}
-
-.task-row:hover {
-    opacity: 0.9;
-}
-
-.task-done-checkbox {
-    transform: scale(1.25);
-}
-
-.task-time {
-    font-weight: 600;
-}
-
-.task-title {
-    font-size: 14px;
-}
-
-.miniBtn {
-    background: none;
+    color: var(--text-color);
+    border-radius: 22px;
+    padding: 32px;
+    width: 480px;
+    max-width: 92%;
     border: none;
+
+    /* ВЫРАВНИВАНИЕ ПО ЦЕНТРУ */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    /* ГЛУБОКАЯ ТЕНЬ ДЛЯ ОБЪЁМА */
+    box-shadow:
+        0 0 65px rgba(255, 255, 255, 0.8),
+        0 0 35px rgba(255, 255, 255, 0.5),
+        0 8px 25px rgba(0, 0, 0, 0.25);
+
+    animation: modalFade 0.35s ease forwards;
+}
+
+/* ПЛАВНОЕ ПОЯВЛЕНИЕ */
+@keyframes modalFade {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -45%);
+        filter: blur(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+        filter: blur(0);
+    }
+}
+
+/* ФОН-ПОДЛОЖКА */
+.modal-window::backdrop {
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+}
+
+/* === APPEAR ANIMATION === */
+@keyframes reportsPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.85) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+
+
+/* === TITLE === */
+.modal-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* === REPORTS LIST === */
+.reports-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.reports-list>button{
+    color: white;
     font-size: 18px;
-    opacity: 0.6;
+}
+.reports-list>button:hover{
+    color: black;
 }
 
-.miniBtn:hover {
-    opacity: 1;
+/* === REPORT BUTTONS === */
+.report-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 14px 20px;
+
+    width: 100%;
+    border-radius: 14px;
+
+    background: rgb(88, 195, 184);
+    border: 1px solid rgba(0,0,0,0.12);
+
+    cursor: pointer;
+    
+    font-weight: 600;
+    
+
+    color: var(--text-color);
+
+    transition: 0.25s ease;
+
+    box-shadow:
+        0 0 30px rgba(255,255,255,0.95),
+        0 4px 10px rgba(0,0,0,0.06);
 }
 
-/* shift info */
-#shiftTime,
-#shiftPlace,
-#shiftPartner {
-    background: var(--day-bg);
-    padding: 6px 10px;
-    border-radius: var(--radius);
-    margin-bottom: 6px;
-    box-shadow: var(--shadow);
+.report-item:hover {
+    background: var(--accent-soft);
+    transform: translateY(-2px);
+    box-shadow:
+        0 0 40px rgba(255,255,255,1),
+        0 6px 14px rgba(0,0,0,0.12);
 }
+
+.report-icon {
+    width: 22px;
+    height: 22px;
+    opacity: 0.8;
+}
+
 
 /* =========================================================
    6. AUTH (LOGIN / REGISTER)
@@ -718,7 +1000,7 @@ body.dark .theme-btn {
    8. BUTTONS
    ========================================================= */
 
-.btn-primary {
+/* .btn-primary {
     background: var(--accent);
     border: none;
     padding: 10px 14px;
@@ -738,21 +1020,62 @@ body.dark .theme-btn {
     color: white;
     padding: 10px 14px;
     border-radius: var(--radius);
-}
+} */
 
-.day-modal-close{
-    color: red;
-    border: none;
-    font-size: 26px;
-    font-weight: 600;
+/* =========================================================
+   MODAL CLOSE BUTTON — красивый крестик ✕
+   ========================================================= */
+
+.modal-close {
     position: absolute;
-    right: 3%;
-    top: 3%;
+    top: 14px;
+    right: 14px;
 
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: rgba(0,0,0,0.06);
+    border: none;
+    outline: none !important;
+
+    font-size: 19px;
+    font-weight: 900;
+    color: #d84a4a;
+
+    cursor: pointer;
+    transition: 0.18s ease;
+    user-select: none;
 }
-.day-modal-close:hover{
-    transform: scale(0.9);
+
+.modal-close:hover {
+    background: rgba(255, 0, 0, 0.15);
+    transform: scale(1.12);
 }
+
+.modal-close:active {
+    transform: scale(0.96);
+}
+.modal-close:focus,
+.modal-close:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* тёмная тема */
+body.dark .modal-close {
+    background: rgba(255,255,255,0.12);
+    color: #ff6b6b;
+}
+
+body.dark .modal-close:hover {
+    background: rgba(255,255,255,0.22);
+}
+
 
 /* =========================================================
    9. FAB BUTTON
@@ -827,7 +1150,7 @@ body.dark .theme-btn {
    11. MOBILE ADAPTATION
    ========================================================= */
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .calendar-day {
         min-height: 95px;
         padding: 10px;
@@ -868,7 +1191,7 @@ body.dark .theme-btn {
     button, input, textarea {
         font-size: 16px;
     }
-}
+} */
 
 /* === REPORTS TABLES ====================================== */
 .wrapperRaport{

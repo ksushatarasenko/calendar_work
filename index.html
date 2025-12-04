@@ -155,18 +155,18 @@
 
         <div class="day-modal-header">
             <div id="dayTitle" class="day-title"></div>
-            <button id="dayCloseBtn" class="day-modal-close"
-                onclick="document.getElementById('dayModal').close()">x</button>
+            <button id="dayCloseBtn" class="day-modal-close modal-close"
+                onclick="document.getElementById('dayModal').close()">❌</button>
         </div>
 
-        
-        <div class="day-modal-section">
+
+        <div class="day-modal-section modal-card">
             <p><b>Zadania:</b></p>
             <div id="taskDayIndicator" class="task-circle"></div>
             <div id="dayTasksContainer"></div>
         </div>
 
-        <div class="day-modal-section">
+        <div class="day-modal-section modal-card">
             <h4>Zmiana:</h4>
 
             <!-- gdy brak zmiany -->
@@ -193,64 +193,100 @@
 
     <!-- MODAL: ADD TASK -->
     <dialog id="taskModal" class="modal-window">
-        <h2>Dodaj zadanie</h2>
 
-        <label>Data</label>
-        <input id="taskDate" type="date">
+        <button class="modal-close" onclick="taskModal.close()">❌</button>
 
-        <label>Godzina</label>
-        <input id="taskTime" type="text" placeholder="07:00" maxlength="5">
+        <h2 class="modal-title">Dodaj zadanie</h2>
 
-        <label>Tytuł</label>
-        <input id="taskTitle" type="text">
+        <div class="modal-field">
+            <label class="modal-label">Data:</label>
+            <input id="taskDate" type="date" class="modal-input">
+        </div>
 
-        <label>Opis</label>
-        <textarea id="taskDesc"></textarea>
+        <div class="modal-field">
+            <label class="modal-label">Godzina:</label>
+            <input id="taskTime" type="text" placeholder="07:00" maxlength="5" class="modal-input">
+        </div>
 
-        <label>
+        <div class="modal-field">
+            <label class="modal-label">Tytuł:</label>
+            <input id="taskTitle" type="text" class="modal-input">
+        </div>
+
+        <div class="modal-field">
+            <label class="modal-label">Opis:</label>
+            <textarea id="taskDesc" class="modal-input modal-textarea"></textarea>
+        </div>
+
+        <label class="modal-checkbox">
             <input id="taskDone" type="checkbox"> Wykonane
         </label>
 
-        <button id="saveTaskBtn" class="btn-primary">Zapisz</button>
-        <button onclick="document.getElementById('taskModal').close()" class="close-btn">Zamknij</button>
+        <button id="saveTaskBtn" class="modal-save-btn">Zapisz</button>
     </dialog>
+
 
 
     <!-- MODAL: ADD WORK -->
     <dialog id="workModal" class="modal-window">
-        <h2>Dodaj zmianę</h2>
 
-        <label>Data</label>
-        <input id="workDate" type="date">
+        <button class="modal-close" onclick="workModal.close()">❌</button>
 
-        <label>Od</label>
-        <input id="workStart" type="text" placeholder="07:00" maxlength="5">
+        <h2 class="modal-title">Dodaj zmianę</h2>
 
-        <label>Do</label>
-        <input id="workEnd" type="text" placeholder="16:00" maxlength="5">
+        <div class="modal-field">
+            <label class="modal-label">Data:</label>
+            <input id="workDate" type="date" class="modal-input">
+        </div>
 
-        <label>Miejsce</label>
-        <input id="workPlace" type="text">
+        <div class="modal-field">
+            <label class="modal-label">Od:</label>
+            <input id="workStart" type="text" placeholder="07:00" maxlength="5" class="modal-input">
+        </div>
 
-        <label>Osoba</label>
-        <input id="workPartner" type="text">
+        <div class="modal-field">
+            <label class="modal-label">Do:</label>
+            <input id="workEnd" type="text" placeholder="16:00" maxlength="5" class="modal-input">
+        </div>
 
-        <button id="saveWorkBtn" class="btn-primary">Zapisz</button>
-        <button onclick="document.getElementById('workModal').close()" class="close-btn">Zamknij</button>
+        <div class="modal-field">
+            <label class="modal-label">Miejsce:</label>
+            <input id="workPlace" type="text" class="modal-input">
+        </div>
+
+        <div class="modal-field">
+            <label class="modal-label">Osoba:</label>
+            <input id="workPartner" type="text" class="modal-input">
+        </div>
+
+        <button id="saveWorkBtn" class="modal-save-btn">Zapisz</button>
     </dialog>
 
+
     <!-- MODAL: RAPORTY -->
-    <dialog id="reportModal" class="modal-window small">
-        <h2>Raporty</h2>
+    <dialog id="reportModal" class="modal-window reports-modal">
 
-        <div id="reportsContent" class="report-content">
-            <!-- Сюда будет вставляться статистика -->
+        <button onclick="document.getElementById('reportModal').close()" class="modal-close-btn modal-close">❌</button>
+
+        <h2 class="modal-title">Raporty</h2>
+
+        <div class="reports-list">
+            <button id="reportWorkBtn" class="report-item">
+                <!-- <img src="icons/file.svg" class="report-icon"> -->
+                <span> 📑 Raport zmian</span>
+            </button>
+
+            <button id="reportTaskBtn" class="report-item">
+                <!-- <img src="icons/task.svg" class="report-icon"> -->
+                <span>📝 Raport zadań</span>
+            </button>
         </div>
-        <button id="reportWorkBtn" class="btn-primary">Raport zmian</button>
-        <button id="reportTaskBtn" class="btn-secondary">Raport zadań</button>
 
 
-        <button onclick="document.getElementById('reportModal').close()" class="close-btn">Zamknij</button>
+
+
+
+
     </dialog>
 
     <!-- MODAL: EXPORT RANGE -->
