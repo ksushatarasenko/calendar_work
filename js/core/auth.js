@@ -1,6 +1,9 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+// import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+// import { createClient } from "../lib/supabase.mjs";
 
-export const supabase = createClient(
+
+
+export const supabase = window.supabase.createClient(
     "https://fnocjjlsqijawypgxalm.supabase.co",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZub2NqamxzcWlqYXd5cGd4YWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQyMzI3MDIsImV4cCI6MjA3OTgwODcwMn0._-aEFX0qAumIVdmkXhZhNUiDGQhSq0HRxTo73TJKyP0"
 );
