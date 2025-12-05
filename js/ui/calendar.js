@@ -108,6 +108,7 @@ export async function renderCalendar(year, month) {
     for (let i = 0; i < totalCells; i++) {
         const cell = document.createElement("div");
         cell.classList.add("calendar-day");
+        
 
         // outside month
         if (i < offset || i >= offset + daysInMonth) {
@@ -119,11 +120,24 @@ export async function renderCalendar(year, month) {
         const dayNumber = i - offset + 1;
         const dateISO = `${year}-${String(month + 1).padStart(2, "0")}-${String(dayNumber).padStart(2, "0")}`;
 
+        // CHECK TODAY
+const today = new Date();
+const isToday =
+    dayNumber === today.getDate() &&
+    month === today.getMonth() &&
+    year === today.getFullYear();
+
+if (isToday) {
+    cell.classList.add("today");
+}
+
         // NUMBER
         const num = document.createElement("div");
         num.classList.add("day-number");
         num.textContent = dayNumber;
         cell.appendChild(num);
+        
+
 
         // SHIFT META — СНАЧАЛА СМЕНА
         if (workMap[dateISO]) {

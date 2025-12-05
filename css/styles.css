@@ -17,7 +17,7 @@
     --border-color: #ddd;
 
     --accent: #2EC4B6;
-    --accent-soft: rgba(46,196,182,0.15);
+    --accent-soft: rgba(46, 196, 182, 0.15);
 
     --task-green: #2ecc71;
     --task-grey: #888;
@@ -26,7 +26,7 @@
     --disabled-text: #999;
 
     --radius: 12px;
-    --shadow: 0 4px 14px rgba(0,0,0,0.1);
+    --shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
 body.dark {
@@ -44,7 +44,7 @@ body.dark {
     --border-color: #555;
 
     --accent: #2EC4B6;
-    --accent-soft: rgba(46,196,182,0.25);
+    --accent-soft: rgba(46, 196, 182, 0.25);
 
     --task-green: #4de68a;
     --task-grey: #aaa;
@@ -52,7 +52,7 @@ body.dark {
     --disabled-bg: #333;
     --disabled-text: #777;
 
-    --shadow: 0 4px 14px rgba(0,0,0,0.4);
+    --shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
 /* =========================================================
@@ -71,13 +71,13 @@ body {
     font-family: -apple-system, 'Inter', 'Segoe UI', Roboto, sans-serif;
     transition: background 0.25s ease, color 0.25s ease;
     -webkit-tap-highlight-color: transparent;
-     max-width: 1100px;
+    max-width: 1100px;
     margin: 0 auto;
 }
 
 button {
     cursor: pointer;
-    
+
 }
 
 .hidden {
@@ -89,9 +89,10 @@ button {
    ========================================================= */
 
 .header {
-    max-width: 1100px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 12px 18px 22px;
+    margin-bottom: 15px;
+    padding: 12px 8px 22px;
     border-radius: 26px;
 
     background: var(--day-bg);
@@ -99,17 +100,18 @@ button {
 
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    position: sticky;
+    gap: 10px;
+    /* position: sticky; - календарь заезжает под шапку*/
     top: 0;
     z-index: 50;
 }
+
 /* ---------- ROW 1: стрелки + месяц ---------- */
 .header-row-1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 18px;
+    gap: 28px;
 }
 
 .nav-btn {
@@ -128,12 +130,12 @@ button {
 }
 
 .nav-btn img {
-    width: 18px;
+    /* width: 18px; */
 }
 
 .nav-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
     border-color: var(--accent);
 }
 
@@ -141,22 +143,24 @@ button {
     font-size: 30px;
     font-weight: 700;
     margin: 0;
+    font-family: "Inter", "Roboto", sans-serif;
 }
+
 /* ---------- ROW 2: кнопки Ekport / Raporty ---------- */
 .header-row-2 {
     display: flex;
     justify-content: center;
     gap: 14px;
     flex-wrap: wrap;
-    margin-top: 6px;
+    margin-top: 4px;
 }
 
 .action-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 18px;
 
-    padding: 10px 20px;
+    padding: 10px 15px;
     border-radius: 14px;
     border: none;
 
@@ -165,19 +169,20 @@ button {
     font-weight: 600;
     font-size: 15px;
 
-    box-shadow: 0 12px 24px rgba(46,196,182,0.35);
+    box-shadow: 0 12px 24px rgba(46, 196, 182, 0.35);
     transition: 0.15s;
 }
 
-.action-btn img {
+/* .action-btn img {
     width: 18px;
     height: 18px;
-}
+} */
 
 .action-btn:hover {
     background: #26b0a1;
     transform: translateY(-1px);
 }
+
 /* ---------- ROW 3: email + logout + theme ---------- */
 .header-row-3 {
     display: flex;
@@ -185,7 +190,8 @@ button {
     align-items: center;
     gap: 14px;
     flex-wrap: wrap;
-    margin-top: 4px;
+
+    /* margin-top: 4px; */
 }
 
 #userEmail {
@@ -197,7 +203,7 @@ button {
     padding: 7px 14px;
     font-size: 14px;
 
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 10px;
     border: 1px solid var(--border-color);
 
@@ -205,7 +211,7 @@ button {
 }
 
 .logout-btn:hover {
-    background: rgba(0,0,0,0.08);
+    background: rgba(0, 0, 0, 0.08);
 }
 
 .theme-btn {
@@ -213,7 +219,7 @@ button {
     height: 42px;
     border-radius: 50%;
 
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
     border: none;
 
     display: flex;
@@ -228,7 +234,7 @@ button {
 }
 
 .theme-btn:hover {
-    background: rgba(0,0,0,0.08);
+    background: rgba(0, 0, 0, 0.08);
     transform: translateY(-1px);
 }
 
@@ -236,7 +242,7 @@ button {
 
 body.dark .header {
     background: #262626;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 body.dark .nav-btn {
@@ -249,13 +255,13 @@ body.dark .nav-btn:hover {
 }
 
 body.dark .logout-btn {
-    background: rgba(255,255,255,0.12);
-    border-color: rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
     color: #fff;
 }
 
 body.dark .theme-btn {
-    background: rgba(255,255,255,0.12);
+    background: rgba(255, 255, 255, 0.12);
 }
 
 /* ---------- MOBILE ADAPTATION ---------- */
@@ -279,7 +285,10 @@ body.dark .theme-btn {
     }
 
     .month-title {
-        font-size: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: -0.5px;
     }
 
     .month-arrow {
@@ -305,7 +314,8 @@ body.dark .theme-btn {
     }
 
 }
-/*  */
+
+/* MOBILE ADAPTATION */
 .weekday-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -334,7 +344,7 @@ body.dark .theme-btn {
     min-width: 50px;
 
     padding: 12px 10px;
-    box-shadow: 2px 8px 18px rgba(0,0,0,0.06);
+    box-shadow: 2px 8px 18px rgba(0, 0, 0, 0.06);
     transition: 0.2s ease;
     display: flex;
     flex-direction: column;
@@ -344,14 +354,20 @@ body.dark .theme-btn {
 /* Hover */
 .calendar-day:hover {
     transform: translateY(-5px);
-    box-shadow: 0 14px 22px rgba(0,0,0,0.10);
+    box-shadow: 0 14px 22px rgba(0, 0, 0, 0.10);
 }
 
 /* Сегодня */
 .calendar-day.today {
-    background: var(--accent-soft);
-    border: 2px solid var(--accent);
+   /* твой мятный цвет */
+    color: white !important;
+    border-radius: 14px;
+    font-weight: 700;
+    box-shadow: 
+    0px 6px 10px #52c7b8,
+    0px -6px 10px #52c7b8;
 }
+
 
 /* День из прошлого/следующего месяца */
 .calendar-day.disabled {
@@ -378,12 +394,15 @@ body.dark .theme-btn {
     flex-direction: column;
     gap: 2px;
 
-    min-height: 70%; /* фиксированная зона */
+    min-height: 70%;
+    /* фиксированная зона */
 }
+
 /* Если строки всего одна — ровно центрируем относительно области */
-.day-meta > div {
+.day-meta>div {
     flex-shrink: 0;
 }
+
 /* Индикатор задачи */
 .task-indicator {
     width: 12px;
@@ -402,10 +421,12 @@ body.dark .theme-btn {
 .task-indicator.grey {
     background-color: var(--task-grey);
 }
+
 /* Позиционируем индикатор */
 .calendar-day {
     position: relative;
 }
+
 /* slide animations */
 /* .slide-left {
     transform: translateX(-40px);
@@ -418,9 +439,17 @@ body.dark .theme-btn {
 } */
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
 /* =========================================================
    MOBILE ADAPTATION
    ========================================================= */
@@ -473,7 +502,7 @@ body.dark .theme-btn {
 /* =========================================================
    4.1 DAY CONTENT — Часы, Место, С кем, Задачи
    ========================================================= */
-  
+
 
 .modal-card {
     background: var(--day-bg);
@@ -482,12 +511,12 @@ body.dark .theme-btn {
     margin-bottom: 16px;
 
     /* мягкая объемная тень */
-    box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
     transition: 0.2s ease;
 }
 
 .modal-card:hover {
-    box-shadow: 0 12px 28px rgba(0,0,0,0.16);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
 }
 
 /* Стиль одной строки внутри дня */
@@ -508,7 +537,8 @@ body.dark .theme-btn {
 
 /* Смена (Shift) — выделение */
 .shift-box {
-    background: rgba(46,196,182,0.12); /* мягкая бирюза */
+    background: rgba(46, 196, 182, 0.12);
+    /* мягкая бирюза */
     padding: 4px 6px;
     border-radius: 10px;
     margin-top: 4px;
@@ -557,6 +587,7 @@ body.dark .theme-btn {
     .shift-box {
         font-size: 11px;
     }
+
     .task-title-mini {
         max-width: 60px;
     }
@@ -587,12 +618,13 @@ body.dark .theme-btn {
     width: 420px;
     max-width: 90%;
     box-shadow:
-        0 25px 55px rgba(0,0,0,0.25),
-        0 0 0 100vmax rgba(0,0,0,0.40);
+        0 25px 55px rgba(0, 0, 0, 0.25),
+        0 0 0 100vmax rgba(0, 0, 0, 0.40);
     position: relative;
 
     animation: modalIn .25s ease;
 }
+
 dialog::backdrop {
     background: rgba(0, 0, 0, 0.45);
     backdrop-filter: blur(4px);
@@ -602,8 +634,10 @@ dialog[open] {
     display: flex;
     flex-direction: column;
     gap: 14px;
-    margin: auto;     /* <<< центрирование */
+    margin: auto;
+    /* <<< центрирование */
 }
+
 dialog.modal-window {
     position: fixed;
     top: 50%;
@@ -613,8 +647,15 @@ dialog.modal-window {
 
 
 @keyframes modalIn {
-    from { opacity: 0; transform: scale(.96) translateY(10px); }
-    to   { opacity: 1; transform: scale(1) translateY(0); }
+    from {
+        opacity: 0;
+        transform: scale(.96) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
 /* .modal-window {
@@ -630,6 +671,7 @@ dialog.modal-window {
     font-size: 22px;
     font-weight: 700;
 }
+
 /* КРЕСТИК */
 .modal-close {
     position: absolute;
@@ -648,19 +690,22 @@ dialog.modal-window {
     align-items: center;
     justify-content: center;
 
-    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
     cursor: pointer;
 
     transition: .15s;
 }
+
 .modal-close:hover {
     transform: scale(0.88);
     background: #ffecec;
 }
+
 .modal-close:focus {
     outline: none !important;
     border: none !important;
 }
+
 /* ПОЛЯ (Labels + Inputs) */
 /* Обёртка */
 .modal-field {
@@ -668,11 +713,13 @@ dialog.modal-window {
     flex-direction: column;
     margin-bottom: 10px;
 }
+
 /* Заголовок поля */
 .modal-label {
     font-weight: 600;
     margin-bottom: 6px;
 }
+
 /* Инпуты и textarea */
 .modal-input {
     padding: 12px 14px;
@@ -682,15 +729,15 @@ dialog.modal-window {
     font-size: 16px;
 
     box-shadow:
-        0 1px 5px rgba(0,0,0,0.07),
-        inset 0 2px 3px rgba(255,255,255,0.9);
+        0 1px 5px rgba(0, 0, 0, 0.07),
+        inset 0 2px 3px rgba(255, 255, 255, 0.9);
 
     transition: 0.2s;
 }
 
 .modal-input:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(46,196,182,0.3);
+    box-shadow: 0 0 0 3px rgba(46, 196, 182, 0.3);
     outline: none;
 }
 
@@ -698,6 +745,7 @@ dialog.modal-window {
     height: 80px;
     resize: none;
 }
+
 /* Чекбокс */
 .modal-checkbox {
     display: flex;
@@ -706,6 +754,7 @@ dialog.modal-window {
     margin: 12px 0;
     font-size: 16px;
 }
+
 /* Кнопка “Сохранить” */
 .modal-save-btn {
     background: var(--accent);
@@ -719,11 +768,12 @@ dialog.modal-window {
 
     width: 100%;
 
-    box-shadow: 0 4px 12px rgba(46,196,182,0.35);
+    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.35);
     transition: .2s;
 }
+
 .modal-save-btn:hover {
-    background:rgb(66, 197, 175) ;
+    background: rgb(66, 197, 175);
 }
 
 /* =========================================================
@@ -761,6 +811,7 @@ dialog.modal-window {
         transform: translate(-50%, -45%);
         filter: blur(4px);
     }
+
     to {
         opacity: 1;
         transform: translate(-50%, -50%);
@@ -780,6 +831,7 @@ dialog.modal-window {
         opacity: 0;
         transform: scale(0.85) translateY(20px);
     }
+
     100% {
         opacity: 1;
         transform: scale(1) translateY(0);
@@ -802,11 +854,13 @@ dialog.modal-window {
     flex-direction: column;
     gap: 16px;
 }
-.reports-list>button{
+
+.reports-list>button {
     color: white;
     font-size: 18px;
 }
-.reports-list>button:hover{
+
+.reports-list>button:hover {
     color: black;
 }
 
@@ -822,28 +876,28 @@ dialog.modal-window {
     border-radius: 14px;
 
     background: rgb(88, 195, 184);
-    border: 1px solid rgba(0,0,0,0.12);
+    border: 1px solid rgba(0, 0, 0, 0.12);
 
     cursor: pointer;
-    
+
     font-weight: 600;
-    
+
 
     color: var(--text-color);
 
     transition: 0.25s ease;
 
     box-shadow:
-        0 0 30px rgba(255,255,255,0.95),
-        0 4px 10px rgba(0,0,0,0.06);
+        0 0 30px rgba(255, 255, 255, 0.95),
+        0 4px 10px rgba(0, 0, 0, 0.06);
 }
 
 .report-item:hover {
     background: var(--accent-soft);
     transform: translateY(-2px);
     box-shadow:
-        0 0 40px rgba(255,255,255,1),
-        0 6px 14px rgba(0,0,0,0.12);
+        0 0 40px rgba(255, 255, 255, 1),
+        0 6px 14px rgba(0, 0, 0, 0.12);
 }
 
 .report-icon {
@@ -864,8 +918,10 @@ dialog.modal-window {
     align-items: center;
     justify-content: center;
 
-    background: rgba(15, 23, 42, 0.55);      /* полупрозрачный тёмный фон */
-    backdrop-filter: blur(4px);              /* лёгкий blur */
+    background: rgba(15, 23, 42, 0.55);
+    /* полупрозрачный тёмный фон */
+    backdrop-filter: blur(4px);
+    /* лёгкий blur */
     z-index: 100;
 
     /* если вдруг что-то наследуется */
@@ -880,7 +936,8 @@ dialog.modal-window {
     padding: 24px 28px;
     border-radius: 24px;
 
-    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.55); /* мягкое свечение вокруг */
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.55);
+    /* мягкое свечение вокруг */
     max-width: 380px;
     width: min(380px, 90vw);
 
@@ -888,12 +945,14 @@ dialog.modal-window {
     flex-direction: column;
     gap: 14px;
 }
+
 /* Заголовок “Вход / Logowanie” */
 .auth-box h2 {
     margin: 0 0 6px;
     font-size: 22px;
     font-weight: 700;
 }
+
 /* Подписи к полям */
 .auth-box label {
     display: block;
@@ -919,6 +978,7 @@ dialog.modal-window {
     box-shadow: 0 0 0 3px rgba(46, 196, 182, 0.25);
     background: #ffffff;
 }
+
 /* Кнопка “Войти / Zaloguj” и “Utwórz konto” — в нашей гамме */
 .auth-box .btn-primary {
     width: 100%;
@@ -940,7 +1000,8 @@ dialog.modal-window {
 .auth-box .btn-primary:hover {
     transform: translateY(-1px);
     box-shadow: 0 14px 32px rgba(46, 196, 182, 0.55);
-    background: #26b0a1; /* чуть темнее акцент */
+    background: #26b0a1;
+    /* чуть темнее акцент */
 }
 
 .auth-box .btn-primary:active {
@@ -1054,7 +1115,7 @@ dialog.modal-window {
     justify-content: center;
 
     border-radius: 50%;
-    background: rgba(0,0,0,0.06);
+    background: rgba(0, 0, 0, 0.06);
     border: none;
     outline: none !important;
 
@@ -1075,6 +1136,7 @@ dialog.modal-window {
 .modal-close:active {
     transform: scale(0.96);
 }
+
 .modal-close:focus,
 .modal-close:active {
     outline: none !important;
@@ -1083,12 +1145,12 @@ dialog.modal-window {
 
 /* тёмная тема */
 body.dark .modal-close {
-    background: rgba(255,255,255,0.12);
+    background: rgba(255, 255, 255, 0.12);
     color: #ff6b6b;
 }
 
 body.dark .modal-close:hover {
-    background: rgba(255,255,255,0.22);
+    background: rgba(255, 255, 255, 0.22);
 }
 
 
@@ -1133,7 +1195,7 @@ body.dark .modal-close:hover {
     padding: 8px;
     width: 100%;
     text-align: left;
-     z-index: 99999 !important;
+    z-index: 99999 !important;
     pointer-events: auto !important;
 }
 
@@ -1142,23 +1204,23 @@ body.dark .modal-close:hover {
    ========================================================= */
 
 .splash-screen {
-    position:fixed;
-    inset:0;
+    position: fixed;
+    inset: 0;
     background: var(--bg-color);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .splash-title {
-    margin-top:12px;
-    font-size:24px;
-    font-weight:700;
+    margin-top: 12px;
+    font-size: 24px;
+    font-weight: 700;
 }
 
 .splash-sub {
-    color:var(--subtle-text);
+    color: var(--subtle-text);
 }
 
 /* =========================================================
@@ -1209,11 +1271,12 @@ body.dark .modal-close:hover {
 } */
 
 /* === REPORTS TABLES ====================================== */
-.wrapperRaport{
+.wrapperRaport {
     max-width: 900px;
     margin: 40px auto;
     padding: 20px;
 }
+
 .report-container {
     max-width: 900px;
     margin: 40px auto;
@@ -1223,12 +1286,13 @@ body.dark .modal-close:hover {
 
 }
 
-.headRaport{
+.headRaport {
     background-color: #39d0c1;
     text-align: center;
     padding: 1%;
     color: white;
 }
+
 .report-title {
     font-size: 32px;
     font-weight: 700;
@@ -1264,7 +1328,8 @@ body.dark .modal-close:hover {
     font-size: 22px;
     font-weight: 700;
 }
-.report-footer{
+
+.report-footer {
     font-size: 28px;
     margin-top: 2%;
     background-color: #39d0c1;
@@ -1315,7 +1380,8 @@ body.dark .modal-close:hover {
     .report-table th,
     .report-table td {
         padding: 8px;
-        white-space: nowrap; /* предотвращает “ломание” слов */
+        white-space: nowrap;
+        /* предотвращает “ломание” слов */
     }
 }
 
