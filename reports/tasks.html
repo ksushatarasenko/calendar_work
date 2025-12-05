@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="../css/styles.css">
+   
 </head>
 
 <body class="wrapperRaport">
@@ -29,7 +30,11 @@
         </thead>
         <tbody></tbody>
     </table>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+    // ждём пока UMD создаст window.supabase
+    console.log("UMD loaded:", window.supabase);
+</script>
     <script type="module">
         import { supabase } from "../js/core/auth.js";
 

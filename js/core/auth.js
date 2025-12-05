@@ -1,14 +1,16 @@
 // import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 // import { createClient } from "../lib/supabase.mjs";
 
+console.log("=== SUPABASE CLIENT CREATED ===", window.supabase.createClient);
 
 
 export const supabase = window.supabase.createClient(
     "https://fnocjjlsqijawypgxalm.supabase.co",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZub2NqamxzcWlqYXd5cGd4YWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQyMzI3MDIsImV4cCI6MjA3OTgwODcwMn0._-aEFX0qAumIVdmkXhZhNUiDGQhSq0HRxTo73TJKyP0"
 );
+ console.log("=== SUPABASE CLIENT CREATED ===", supabase);
 
-console.log("=== SUPABASE CLIENT CREATED ===", supabase);
+
 
 
 // ========================================================================
@@ -26,9 +28,13 @@ export async function getSessionUser() {
         return null;
     }
 
+    // ❗ ВОЗВРАЩАЕМ ПОВЕДЕНИЕ SUPABASE v1
+    supabase.auth.user = () => data.session.user;
+
     console.log("[SESSION] Active user:", data.session.user);
     return data.session.user;
 }
+
 
 
 // ========================================================================

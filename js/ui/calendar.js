@@ -5,6 +5,7 @@
 import { getTaskRange, getWorkRange } from "../core/db.js";
 import { getMonthData } from "../core/db.js";
 
+
 // DOM
 const calendarGrid = document.getElementById("calendar");
 const weekdayGrid = document.querySelector(".weekday-grid");
@@ -22,8 +23,8 @@ const monthsPL = [
 const weekdaysPL = ["Pon", "Wt", "Śr", "Czw", "Pt", "Sob", "Nd"];
 
 // State
-let currentYear = new Date().getFullYear();
-let currentMonth = new Date().getMonth();
+export let currentYear = new Date().getFullYear();
+export let currentMonth = new Date().getMonth();
 
 // ======================================================================
 // INIT
@@ -69,7 +70,8 @@ function renderWeekdays() {
 
 export async function renderCalendar(year, month) {
     calendarGrid.innerHTML = "";
-
+    currentYear = year;
+    currentMonth = month;
     titleEl.textContent =
         `${monthsPL[month]} ${year}`.charAt(0).toUpperCase() +
         `${monthsPL[month]} ${year}`.slice(1);
@@ -108,7 +110,7 @@ export async function renderCalendar(year, month) {
     for (let i = 0; i < totalCells; i++) {
         const cell = document.createElement("div");
         cell.classList.add("calendar-day");
-        
+
 
         // outside month
         if (i < offset || i >= offset + daysInMonth) {
@@ -121,22 +123,22 @@ export async function renderCalendar(year, month) {
         const dateISO = `${year}-${String(month + 1).padStart(2, "0")}-${String(dayNumber).padStart(2, "0")}`;
 
         // CHECK TODAY
-const today = new Date();
-const isToday =
-    dayNumber === today.getDate() &&
-    month === today.getMonth() &&
-    year === today.getFullYear();
+        const today = new Date();
+        const isToday =
+            dayNumber === today.getDate() &&
+            month === today.getMonth() &&
+            year === today.getFullYear();
 
-if (isToday) {
-    cell.classList.add("today");
-}
+        if (isToday) {
+            cell.classList.add("today");
+        }
 
         // NUMBER
         const num = document.createElement("div");
         num.classList.add("day-number");
         num.textContent = dayNumber;
         cell.appendChild(num);
-        
+
 
 
         // SHIFT META — СНАЧАЛА СМЕНА
