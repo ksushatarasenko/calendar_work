@@ -92,7 +92,7 @@ button {
     max-width: 1000px;
     margin: 0 auto;
     margin-bottom: 15px;
-    padding: 12px 8px 22px;
+    padding: 12px 8px 12px;
     border-radius: 26px;
 
     background: var(--day-bg);
@@ -100,10 +100,7 @@ button {
 
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    /* position: sticky; - календарь заезжает под шапку*/
     top: 0;
-    z-index: 50;
 }
 
 /* ---------- ROW 1: стрелки + месяц ---------- */
@@ -427,16 +424,6 @@ body.dark .theme-btn {
     position: relative;
 }
 
-/* slide animations */
-/* .slide-left {
-    transform: translateX(-40px);
-    opacity: 0;
-}
-
-.slide-right {
-    transform: translateX(40px);
-    opacity: 0;
-} */
 
 @keyframes fadeIn {
     from {
@@ -658,13 +645,7 @@ dialog.modal-window {
     }
 }
 
-/* .modal-window {
-    animation: modalIn .25s ease;
-}
 
-.close-btn {
-    margin-top: 10px;
-} */
 /* ЗАГОЛОВОК */
 .modal-title {
     margin: 0 0 15px;
@@ -774,6 +755,34 @@ dialog.modal-window {
 
 .modal-save-btn:hover {
     background: rgb(66, 197, 175);
+}
+/* Кнопка в модальном окне детали дня */
+.btn-detalDay{
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1%;
+    margin-right: 1%;
+    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.35);
+    transition: .2s;
+}
+.btn-detalDay:hover {
+    transform: scale(0.9);
+}
+
+.task-row{
+    display: flex;
+    gap: 2%;
+}
+.day-title{
+    color: rgb(49, 160, 141);
+    font-size: 20px;
+    font-weight: 600;
 }
 
 /* =========================================================
@@ -1072,31 +1081,9 @@ dialog.modal-window {
     color: var(--accent);
 }
 
-/* =========================================================
-   8. BUTTONS
-   ========================================================= */
 
-/* .btn-primary {
-    background: var(--accent);
-    border: none;
-    padding: 10px 14px;
-    border-radius: var(--radius);
-    color: white;
-}
 
-.btn-secondary {
-    border: 2px solid var(--accent);
-    padding: 10px 14px;
-    border-radius: var(--radius);
-    color: var(--accent);
-}
 
-.btn-danger {
-    background: #ff4d4d;
-    color: white;
-    padding: 10px 14px;
-    border-radius: var(--radius);
-} */
 
 /* =========================================================
    MODAL CLOSE BUTTON — красивый крестик ✕
@@ -1191,13 +1178,29 @@ body.dark .modal-close:hover {
 .fab-option {
     background: none;
     border: none;
-    color: var(--text-color);
+    color: rgb(49, 160, 141);
+    font-weight: 600;
     padding: 8px;
     width: 100%;
     text-align: left;
     z-index: 99999 !important;
     pointer-events: auto !important;
+    font-size: 18px;
+    margin: 2% 0;
+    box-shadow: 
+    0px 4px 10px #52c7b8;
+    border-radius: 16px;
 }
+
+.fab-option:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+    color:white;
+    background-color: rgb(27, 177, 137);
+    border-radius: 16px;
+    margin-left: 0px;
+}
+
 
 /* =========================================================
    10. SPLASH SCREEN

@@ -97,7 +97,6 @@
 
         <!-- HEADER -->
         <header class="header">
-
             <div class="header-row-1">
                 <button id="prevMonth" class="nav-btn">
                     <img src="icons/arrow-left.svg">
@@ -164,9 +163,9 @@
 
 
         <div class="day-modal-section modal-card">
-            <p><b>Zadania:</b></p>
-            <div id="taskDayIndicator" class="task-circle"></div>
-            <div id="dayTasksContainer"></div>
+            <p><b>📌 Zadania:</b></p>
+            <div id="taskDayIndicator" class="task-circle icon-detalDay"></div>
+            <div id="dayTasksContainer" class="icon-detalDay"></div>
         </div>
 
         <div class="day-modal-section modal-card">
@@ -181,13 +180,13 @@
             <p id="shiftPartner" class="hidden"></p>
 
             <!-- przyciski gdy zmiana istnieje -->
-            <button id="dayEditWork" class="btn-primary hidden">Edytuj zmianę</button>
-            <button id="dayDeleteWork" class="btn-danger hidden">Usuń zmianę</button>
+            <button id="dayEditWork" class="btn-primary hidden btn-detalDay">📝 Edytuj zmianę</button>
+            <button id="dayDeleteWork" class="btn-danger hidden btn-detalDay">🗑 Usuń zmianę</button>
         </div>
 
 
         <div class="day-modal-actions">
-            <button id="dayAddTask" class="btn-primary">Dodaj zadanie</button>
+            <button id="dayAddTask" class="btn-primary btn-detalDay">Dodaj zadanie</button>
         </div>
 
     </dialog>
