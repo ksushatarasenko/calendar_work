@@ -632,6 +632,11 @@ dialog.modal-window {
     transform: translate(-50%, -50%);
 }
 
+.modal-window>input{
+    border-radius: 16px;
+    padding: 2%;
+}
+
 
 @keyframes modalIn {
     from {
