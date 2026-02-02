@@ -12,6 +12,7 @@ import { openDayDetails } from "./ui/modal-day.js";
 import { initReports } from "./ui/reports.js";
 import { openExportModal } from "./ui/export.js";
 import { initPinScreen } from "./ui/pin-screen.js";
+import { exportBackup, importBackup } from "./ui/backup.js";
 
 // =========================================================
 // GLOBAL MODALS (нужны другим модулям)
@@ -71,3 +72,12 @@ export function startCalendarApp() {
   initCalendar();
   initReports();
 }
+
+// КНОПКИ БД
+document.getElementById("backupExport").onclick = exportBackup;
+
+document.getElementById("backupImportBtn").onclick = () =>
+    document.getElementById("backupImport").click();
+
+document.getElementById("backupImport").onchange = e =>
+    importBackup(e.target.files[0]);
