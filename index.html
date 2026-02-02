@@ -5,9 +5,6 @@
     <meta charset="UTF-8">
     <title>Work Calendar</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <meta http-equiv="Content-Security-Policy"
-    
-      content="script-src 'self' https://cdn.jsdelivr.net https://cdn.sheetjs.com; object-src 'none';"> -->
 
     <!-- Styles -->
     <link rel="stylesheet" href="css/styles.css">
@@ -93,6 +90,31 @@
     <!-- ========================================================= -->
     <!-- 3) CALENDAR MAIN SCREEN -->
     <!-- ========================================================= -->
+    <!-- PIN SCREEN -->
+    <div id="pinScreen" class="screen hidden">
+        <div class="pin-box">
+            <h2 id="pinTitle">Вход</h2>
+
+            <select id="userSelect" class="pin-input"></select>
+
+            <input id="newUserName" class="pin-input hidden" placeholder="Имя пользователя" />
+
+            <input id="pinInput" class="pin-input" type="password" inputmode="numeric" placeholder="PIN" />
+
+            <button id="pinSubmit" class="btn-primary">
+                Войти
+            </button>
+
+            <button id="addUserBtn" class="btn-secondary">
+                + Добавить пользователя
+            </button>
+
+            <p id="pinError" class="pin-error hidden">
+                Неверный PIN
+            </p>
+        </div>
+    </div>
+
     <div id="calendarScreen" class="calendar-screen hidden">
 
         <!-- HEADER -->
@@ -122,7 +144,7 @@
             <div class="header-row-3">
                 <span id="userEmail"></span>
 
-                <button id="logoutBtn" class="logout-btn">🚪 Wyloguj</button>
+                <!-- <button id="logoutBtn" class="logout-btn">🚪 Wyloguj</button> -->
 
                 <button id="darkToggle" class="theme-btn">
                     <img id="themeIcon" src="icons/moon.svg">
@@ -130,6 +152,35 @@
             </div>
 
         </header>
+
+        <!-- PIN SCREEN -->
+        <div id="pinScreen" class="screen hidden">
+            <div class="pin-box">
+                <h2 id="pinTitle">Вход</h2>
+
+                <!-- Выбор пользователя -->
+                <select id="userSelect" class="pin-input"></select>
+
+                <!-- Имя нового пользователя -->
+                <input id="newUserName" class="pin-input hidden" placeholder="Имя пользователя" />
+
+                <!-- PIN -->
+                <input id="pinInput" class="pin-input" type="password" inputmode="numeric" placeholder="PIN" />
+
+                <button id="pinSubmit" class="btn-primary">
+                    Войти
+                </button>
+
+                <button id="addUserBtn" class="btn-secondary">
+                    + Добавить пользователя
+                </button>
+
+                <p id="pinError" class="pin-error hidden">
+                    Неверный PIN
+                </p>
+            </div>
+        </div>
+        <!-- CALENDAR GRID -->
 
         <div class="weekday-grid"></div>
         <div id="calendar" class="calendar-grid"></div>
@@ -307,24 +358,24 @@
 
 
 
-    
+
     <!-- JS -->
     <!-- ========================= -->
     <!--  JAVASCRIPT MODULES ORDER  -->
     <!-- ========================= -->
 
-    <script type="module" src="js/core/db.js"></script>
-    <script type="module" src="js/core/auth.js"></script>
+    <!-- <script type="module" src="js/core/db.js"></script> -->
+    <!-- <script type="module" src="js/core/auth.js"></script> -->
 
-    <script type="module" src="js/ui/modals-add.js"></script>
+    <!-- <script type="module" src="js/ui/modals-add.js"></script>
     <script type="module" src="js/ui/modal-day.js"></script>
 
     <script type="module" src="js/ui/calendar.js"></script>
     <script type="module" src="js/ui/reports.js"></script>
-    <script type="module" src="js/ui/export.js"></script>
+    <script type="module" src="js/ui/export.js"></script> -->
 
     <!--  -->
-    <script src="js/lib/supabase.js"></script>
+    <!-- <script src="js/lib/supabase.js"></script> -->
 
     <!-- MAIN APP (завершает и запускает всё) -->
     <script type="module" src="js/app.js"></script>

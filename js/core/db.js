@@ -1,331 +1,222 @@
-/* =========================================================
-   DB.JS — оптимизированная версия
-   =========================================================
-   ✔ Единый метод getMonthData()
-   ✔ Кэширование месяца
-   ✔ Быстрые выборки
-   ✔ Меньше запросов = быстрее календарь
-   ✔ Безопасно под RLS
-   ========================================================= */
+import { openDB } from "./idb.js";
+import { getCurrentUser } from "./session.js";
 
-import { supabase } from "./auth.js";
+// export async function insertTask(task) {
+//   const db = await openDB();
+//   task.id = crypto.randomUUID();
+//   task.userId = getCurrentUser(); // 👈 ВАЖНО
 
-let monthCache = {};
-// monthCache["2025-05"] = {...data}
+//   const tx = db.transaction("tasks", "readwrite");
+//   tx.objectStore("tasks").put(task);
+// }
 
-/* =========================================================
-   HELPER: key для кэша
-   ========================================================= */
-function getKey(year, month) {
-    return `${year}-${String(month + 1).padStart(2, "0")}`;
+// export async function getTasksByDate(date) {
+//   const db = await openDB();
+//   const userId = getCurrentUser();
+//   const tx = db.transaction("tasks", "readonly");
+//   const req = tx.objectStore("tasks").getAll();
+
+//   return new Promise(res => {
+//     req.onsuccess = () =>
+//       res(req.result.filter(
+//         t => t.date === date && t.userId === userId
+//       ));
+//   });
+// }
+
+// =====================
+// helpers
+// =====================
+function uid() {
+  return crypto.randomUUID();
 }
 
-/* =========================================================
-   GET MONTH DATA — единый быстрый запрос месяца
-   ========================================================= */
-export async function getMonthData(year, month) {
-    const key = getKey(year, month);
-
-    // Если в кэше — отдаём
-    if (monthCache[key]) {
-        return monthCache[key];
-    }
-
-    const monthStart = `${year}-${String(month + 1).padStart(2, "0")}-01`;
-
-    // находим реальное число дней в месяце
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    const monthEnd = `${year}-${String(month + 1).padStart(2, "0")}-${String(daysInMonth).padStart(2, "0")}`;
-
-
-
-    /* -----------------------------------------------
-       TASKS (1 запрос)
-       ----------------------------------------------- */
-    const { data: tasks, error: errTasks } = await supabase
-        .from("tasks")
-        .select("*")
-        .gte("date", monthStart)
-        .lte("date", monthEnd)
-        .order("time", { ascending: true });
-
-    if (errTasks) console.error("TASKS ERROR:", errTasks);
-
-    /* -----------------------------------------------
-       WORK ENTRIES (1 запрос)
-       ----------------------------------------------- */
-    const { data: works, error: errWorks } = await supabase
-        .from("work_entries")
-        .select("*")
-        .gte("date", monthStart)
-        .lte("date", monthEnd);
-
-    if (errWorks) console.error("WORK ERROR:", errWorks);
-
-    /* -----------------------------------------------
-       Финальная структура данных
-       ----------------------------------------------- */
-    const groupedTasks = {};
-    const groupedWorks = {};
-
-    tasks?.forEach(t => {
-        if (!groupedTasks[t.date]) groupedTasks[t.date] = [];
-        groupedTasks[t.date].push(t);
-    });
-
-    works?.forEach(w => {
-        if (!groupedWorks[w.date]) groupedWorks[w.date] = [];
-        groupedWorks[w.date].push(w);
-    });
-
-    const result = {
-        tasks: groupedTasks,
-        works: groupedWorks
-    };
-
-    // Кэшируем
-    monthCache[key] = result;
-
-    return result;
+function hoursBetween(start, end) {
+  if (!start || !end) return 0;
+  const [sh, sm] = start.split(":").map(Number);
+  const [eh, em] = end.split(":").map(Number);
+  let s = sh * 60 + sm;
+  let e = eh * 60 + em;
+  if (e < s) e += 1440;
+  return +( (e - s) / 60 ).toFixed(2);
 }
 
-/* =========================================================
-   GET DAY DATA
-   ========================================================= */
-export async function getDayData(dateISO) {
-    const { data: tasks } = await supabase
-        .from("tasks")
-        .select("*")
-        .eq("date", dateISO)
-        .order("time", { ascending: true });
+// =====================
+// TASKS
+// =====================
+export async function insertTask(task) {
+  const db = await openDB();
 
-    const { data: works } = await supabase
-        .from("work_entries")
-        .select("*")
-        .eq("date", dateISO);
+  task.id = uid();
+  task.userId = getCurrentUser(); // 👈 обязательно
 
-    return { tasks, works };
-}
+  const tx = db.transaction("tasks", "readwrite");
+  tx.objectStore("tasks").put(task);
 
-/* =========================================================
-   TASKS — CRUD
-   ========================================================= */
-
-export async function getTasksByDate(dateISO) {
-    const { data } = await supabase
-        .from("tasks")
-        .select("*")
-        .eq("date", dateISO)
-        .order("time", { ascending: true });
-
-    return data || [];
-}
-
-export async function insertTask(obj) {
-    // достаём текущего пользователя
-    const { data: session } = await supabase.auth.getUser();
-
-    const payload = {
-        ...obj,
-        user_id: session.user.id   // 🔥 обязательно
-    };
-
-    const { data, error } = await supabase.from("tasks").insert([payload]);
-
-    if (!error) {
-        invalidateCache(obj.date);
-    }
-
-    return { data, error };
+  return { data: task, error: null };
 }
 
 
-export async function updateTask(id, obj) {
-    const { data, error } = await supabase
-        .from("tasks")
-        .update(obj)
-        .eq("id", id);
+export async function updateTask(id, payload) {
+  const db = await openDB();
+  const tx = db.transaction("tasks", "readwrite");
+  const store = tx.objectStore("tasks");
 
-    invalidateCache(obj.date);
-    return { data, error };
+  const req = store.get(id);
+  req.onsuccess = () => {
+    store.put({ ...req.result, ...payload });
+  };
+
+  return { error: null };
 }
 
 export async function deleteTask(id) {
-    const { data: deleted } = await supabase
-        .from("tasks")
-        .delete()
-        .eq("id", id);
-
-    if (deleted && deleted.length > 0) invalidateCache(deleted[0].date);
+  const db = await openDB();
+  const tx = db.transaction("tasks", "readwrite");
+  tx.objectStore("tasks").delete(id);
 }
 
+export async function getTaskRange(from, to) {
+  const db = await openDB();
+  const tx = db.transaction("tasks", "readonly");
+  const req = tx.objectStore("tasks").getAll();
+  const userId = getCurrentUser();
 
-/* =========================================================
-   WORK — CRUD
-   ========================================================= */
+  return new Promise(res => {
+    req.onsuccess = () =>
+      
 
+res(req.result.filter(
+  t =>
+    t.date >= from &&
+    t.date <= to &&
+    t.userId === userId
+));
 
-
-export async function getWorkByDate(dateISO) {
-    const { data } = await supabase
-        .from("work_entries")
-        .select("*")
-        .eq("date", dateISO);
-
-    return data || [];
+  });
 }
-// HELPER: расчёт часов смены
-export function calcTotalHours(start_time, end_time) {
-    if (!start_time || !end_time) return null;
 
-    const [sh, sm] = start_time.split(":").map(Number);
-    const [eh, em] = end_time.split(":").map(Number);
+// =====================
+// WORKS
+// =====================
+export async function insertWork(work) {
+  const db = await openDB();
+  work.id = uid();
+  work.total_hours =
+    work.total_hours ??
+    hoursBetween(work.start_time, work.end_time);
 
-    const start = sh + (sm || 0) / 60;
-    const end = eh + (em || 0) / 60;
+  const tx = db.transaction("works", "readwrite");
+  tx.objectStore("works").put(work);
 
-    const diff = end - start;
-    if (!isFinite(diff) || diff < 0) return null;   // на всякий случай
-
-    return Number(diff.toFixed(2)); // число, а не строка
+  return { data: work, error: null };
 }
-// helper – посчитать часы для БД
-function calcWorkHours(start, end) {
-    if (!start || !end) return null;
-    const [sh, sm] = start.split(":").map(Number);
-    const [eh, em] = end.split(":").map(Number);
-    const diff = (eh + em / 60) - (sh + sm / 60);
-    return Number(diff.toFixed(2)); // число, типа 9 или 9.5
-}
-// WORK – INSERT
-export async function insertWork(obj) {
-    // 1) Берём текущего пользователя
-    const { data: session } = await supabase.auth.getUser();
-    // === Вычисляем total_hours ===
 
-    const payload = {
-        ...obj,
-        user_id: session.user.id,// 👈 ОБЯЗАТЕЛЬНО для RLS-политик
-        total_hours: calcTotalHours(obj.start_time, obj.end_time),
+export async function updateWork(id, payload) {
+  const db = await openDB();
+  const tx = db.transaction("works", "readwrite");
+  const store = tx.objectStore("works");
+
+  const req = store.get(id);
+  req.onsuccess = () => {
+    const updated = {
+      ...req.result,
+      ...payload
     };
+    updated.total_hours =
+      updated.total_hours ??
+      hoursBetween(updated.start_time, updated.end_time);
 
-    // 2) Пишем в ту же таблицу, что и раньше (оставь своё имя таблицы!)
-    const { data, error } = await supabase
-        .from("work_entries")                 // ← если у тебя тут "works" — оставь то, что было
-        .insert([payload]);
+    store.put(updated);
+  };
 
-    if (!error && obj.date) {
-        invalidateCache(obj.date); // если у тебя уже есть такая функция
-    }
-
-    return { data, error };
+  return { error: null };
 }
 
+export async function getWorkByDate(date) {
+  const db = await openDB();
+  const tx = db.transaction("works", "readonly");
+  const req = tx.objectStore("works").getAll();
 
-export async function updateWork(id, obj) {
-    const total_hours = calcWorkHours(obj.start_time, obj.end_time);
-
-    const { data, error } = await supabase
-        .from("work_entries")
-        .update({
-            date: obj.date,
-            start_time: obj.start_time,
-            end_time: obj.end_time,
-            place: obj.place,
-            partner: obj.partner,
-            total_hours
-        })
-        .eq("id", id)
-        .select();
-
-    if (error) {
-        console.error("[DB] updateWork ERROR:", error);
-    }
-
-    return { data, error };
+  return new Promise(res => {
+    req.onsuccess = () =>
+      res(req.result.filter(w => w.date === date));
+  });
 }
 
+export async function getWorkRange(from, to) {
+  const db = await openDB();
+  const tx = db.transaction("works", "readonly");
+  const req = tx.objectStore("works").getAll();
+
+  return new Promise(res => {
+    req.onsuccess = () =>
+      res(req.result.filter(w => w.date >= from && w.date <= to));
+  });
+}
+
+// =====================
+// MONTH DATA (for calendar + reports)
+// =====================
+export async function getMonthData(year, month) {
+  const from = `${year}-${String(month + 1).padStart(2, "0")}-01`;
+  const lastDay = new Date(year, month + 1, 0).getDate();
+  const to = `${year}-${String(month + 1).padStart(2, "0")}-${lastDay}`;
+
+  const tasks = await getTaskRange(from, to);
+  const works = await getWorkRange(from, to);
+
+  const groupedTasks = {};
+  const groupedWorks = {};
+
+  tasks.forEach(t => {
+    (groupedTasks[t.date] ||= []).push(t);
+  });
+
+  works.forEach(w => {
+    (groupedWorks[w.date] ||= []).push(w);
+  });
+
+  return {
+    tasks: groupedTasks,
+    works: groupedWorks
+  };
+}
+
+// =====================
+// CALC (expected by modals-add.js)
+// =====================
+export function calcTotalHours(start, end) {
+  return hoursBetween(start, end);
+}
+export function calcEarnings(totalHours, rate) {
+  return +(totalHours * rate).toFixed(2);
+}
+
+// =====================
+// DELETE WORK (for modal-day.js)
+// =====================
 export async function deleteWork(id) {
-    const { data: shift, error: getError } = await supabase
-        .from("work_entries")
-        .select("date")
-        .eq("id", id)
-        .single();
-
-    if (getError) {
-        console.error("[DB] deleteWork GET ERROR:", getError);
-        return { error: getError };
-    }
-
-    const { error } = await supabase
-        .from("work_entries")
-        .delete()
-        .eq("id", id);
-
-    if (error) {
-        console.error("[DB] deleteWork DELETE ERROR:", error);
-        return { error };
-    }
-
-    return { date: shift.date };
+  const db = await openDB();
+  const tx = db.transaction("works", "readwrite");
+  tx.objectStore("works").delete(id);
 }
 
+// =====================
+// GET TASKS BY DATE (for modal-day.js)
+// =====================
+export async function getTasksByDate(dateISO) {
+  const db = await openDB();
+  const userId = getCurrentUser();
 
-export async function addTask(task) {
-    return await supabase.from("tasks").insert(task);
-}
+  const tx = db.transaction("tasks", "readonly");
+  const req = tx.objectStore("tasks").getAll();
 
-
-/* ============================================================
-   RANGE: TASKS
-   Получить задачи в диапазоне дат (вкл. обе даты)
-   ============================================================ */
-export async function getTaskRange(dateFrom, dateTo) {
-    const { data, error } = await supabase
-        .from("tasks")
-        .select("*")
-        .gte("date", dateFrom)
-        .lte("date", dateTo)
-        .order("date", { ascending: true })
-        .order("time", { ascending: true });
-
-    if (error) {
-        console.error("[DB] getTaskRange ERROR:", error);
-        return [];
-    }
-
-    return data || [];
-}
-
-
-/* ============================================================
-   RANGE: WORK
-   Получить все рабочие смены в диапазоне
-   ============================================================ */
-export async function getWorkRange(dateFrom, dateTo) {
-    const { data, error } = await supabase
-        .from("work_entries")
-        .select("*")
-        .gte("date", dateFrom)
-        .lte("date", dateTo)
-        .order("date", { ascending: true });
-
-    if (error) {
-        console.error("getWorkRange ERROR:", error);
-        return [];
-    }
-    return data;
-}
-
-
-/* =========================================================
-   КЭШ: инвалидатор
-   ========================================================= */
-function invalidateCache(dateISO) {
-    if (!dateISO) return;
-    const [y, m] = dateISO.split("-");
-    const key = `${y}-${m}`;
-    delete monthCache[key];
+  return new Promise(res => {
+    req.onsuccess = () =>
+      res(req.result.filter(
+        t => t.date === dateISO && t.userId === userId
+      ));
+  });
 }
 

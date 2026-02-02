@@ -17,10 +17,38 @@ const reportTaskBtn = document.getElementById("reportTaskBtn");
 /* =========================================================
    Получить текущий год и месяц из заголовка календаря
 ========================================================= */
+// function getCurrentYearMonth() {
+//     console.log("[REPORT] Читаем месяц из заголовка...");
+
+//     const title = document.getElementById("monthTitle")?.textContent.trim();
+//     console.log("[REPORT] Заголовок календаря:", title);
+
+//     if (!title) {
+//         console.error("❌ monthTitle пустой!");
+//         return { year: null, month: null };
+//     }
+
+//     const [monthName, year] = title.split(" ");
+//     console.log("[REPORT] Заголовок календаря после сплита:", monthName, year);
+//     const monthsPL = {
+//     "Styczeń": 0, "Luty": 1, "Marzec": 2, "Kwiecień": 3,
+//     "Maj": 4, "Czerwiec": 5, "Lipiec": 6, "Sierpień": 7,
+//     "Wrzesień": 8, "Październik": 9,  "Listopad": 10,   "Grudzień": 11
+// };
+
+//     const month = monthsPL[monthName];
+
+//     console.log("[REPORT] Разобрали месяц:", { year, month });
+
+//     return { year: Number(year), month };
+// }
+
 function getCurrentYearMonth() {
     console.log("[REPORT] Читаем месяц из заголовка...");
 
-    const title = document.getElementById("monthTitle")?.textContent.trim();
+    const titleEl = document.getElementById("monthTitle");
+    const title = titleEl?.textContent.trim();
+
     console.log("[REPORT] Заголовок календаря:", title);
 
     if (!title) {
@@ -28,20 +56,41 @@ function getCurrentYearMonth() {
         return { year: null, month: null };
     }
 
-    const [monthName, year] = title.split(" ");
-    console.log("[REPORT] Заголовок календаря после сплита:", monthName, year);
+    // 1. Месяц — первое слово
+    const monthName = title.split(" ")[0];
+
+    // 2. Год — любое 4-значное число
+    const yearMatch = title.match(/\d{4}/);
+    const year = yearMatch ? Number(yearMatch[0]) : null;
+
     const monthsPL = {
-    "Styczeń": 0, "Luty": 1, "Marzec": 2, "Kwiecień": 3,
-    "Maj": 4, "Czerwiec": 5, "Lipiec": 6, "Sierpień": 7,
-    "Wrzesień": 8, "Październik": 9,  "Listopad": 10,   "Grudzień": 11
-};
+        "Styczeń": 0,
+        "Luty": 1,
+        "Marzec": 2,
+        "Kwiecień": 3,
+        "Maj": 4,
+        "Czerwiec": 5,
+        "Lipiec": 6,
+        "Sierpień": 7,
+        "Wrzesień": 8,
+        "Październik": 9,
+        "Listopad": 10,
+        "Grudzień": 11
+    };
 
     const month = monthsPL[monthName];
 
-    console.log("[REPORT] Разобрали месяц:", { year, month });
+    console.log("[REPORT] Разобрали месяц:", { year, month, monthName });
 
-    return { year: Number(year), month };
+    if (year === null || month === undefined) {
+        console.error("❌ Не удалось определить месяц или год!");
+        return { year: null, month: null };
+    }
+
+    return { year, month };
 }
+
+
 
 /* =========================================================
    ИНИЦИАЛИЗАЦИЯ МОДУЛЯ — точка входа

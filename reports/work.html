@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <title>Raport zmian</title>
@@ -9,115 +10,109 @@
     <link rel="stylesheet" href="../css/styles.css">
 
     <!-- Supabase UMD -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script> -->
 
     <!-- Core -->
-    <script type="module" src="../js/core/auth.js"></script>
+    <!-- <script type="module" src="../js/core/auth.js"></script> -->
 </head>
 
 <body>
-<div class="wrapperRaport">
+    <div class="wrapperRaport">
 
-    <!-- ==== HEADER ==== -->
-    <div class="headRaport">
-        <h1>Raport zmian</h1>
-        <div id="rangeText" class="report-range"></div>
+        <!-- ==== HEADER ==== -->
+        <div class="headRaport">
+            <h1>Raport zmian</h1>
+            <div id="rangeText" class="report-range"></div>
+        </div>
+
+
+        <!-- ==== TABLE ==== -->
+        <table class="report-table" id="workTable">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Od</th>
+                    <th>Do</th>
+                    <th>Godziny</th>
+                    <th>Miejsce</th>
+                    <th>Osoba</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <!-- ==== SUMA GODZIN ==== -->
+        <div id="totalHours" class="report-sum">Łącznie godzin: 0.00</div>
+
+        <!-- FOOTER -->
+        <div class="report-footer">Koniec raportu</div>
+
     </div>
 
+    <script type="module">
+        import { openDB } from "../js/core/idb.js";
 
-    <!-- ==== TABLE ==== -->
-    <table class="report-table" id="workTable">
-        <thead>
-        <tr>
-            <th>Data</th>
-            <th>Od</th>
-            <th>Do</th>
-            <th>Godziny</th>
-            <th>Miejsce</th>
-            <th>Osoba</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+        const params = new URLSearchParams(window.location.search);
+        const dateFrom = params.get("from");
+        const dateTo = params.get("to");
 
-    <!-- ==== SUMA GODZIN ==== -->
-    <div id="totalHours" class="report-sum">Łącznie godzin: 0.00</div>
+        document.getElementById("rangeText").textContent =
+            `Za okres: ${dateFrom} → ${dateTo}`;
 
-    <!-- FOOTER -->
-    <div class="report-footer">Koniec raportu</div>
+        const db = await openDB();
+        const tx = db.transaction("works", "readonly");
+        const store = tx.objectStore("works");
 
-</div>
+        const rows = [];
+        store.openCursor().onsuccess = e => {
+            const cursor = e.target.result;
+            if (cursor) {
+                const v = cursor.value;
+                if (v.date >= dateFrom && v.date <= dateTo) {
+                    rows.push(v);
+                }
+                cursor.continue();
+            } else {
+                rows.sort((a, b) => a.date.localeCompare(b.date));
+                render(rows);
+            }
+        };
 
+        function render(rows) {
+            const tbody = document.querySelector("#workTable tbody");
+            tbody.innerHTML = "";
 
-<script type="module">
-    import { supabase } from "../js/core/auth.js";
+            let total = 0;
 
-    console.log("=== REPORT START ===");
+            rows.forEach(r => {
+                const tr = document.createElement("tr");
 
-    // 1. Ждём восстановления сессии
-    await supabase.auth.getSession();
+                const hours =
+                    r.start_time && r.end_time
+                        ? (
+                            (new Date(`1970-01-01T${r.end_time}`) -
+                                new Date(`1970-01-01T${r.start_time}`)) / 36e5
+                        ).toFixed(2)
+                        : "0.00";
 
-    // 2. Читаем параметры из URL
-    const params = new URLSearchParams(window.location.search);
-    const dateFrom = params.get("from");
-    const dateTo   = params.get("to");
-
-    document.getElementById("rangeText").textContent =
-        `Za okres: ${dateFrom} ➜ ${dateTo}`;
-
-    console.log("FROM:", dateFrom, "TO:", dateTo);
-
-    // 3. Получаем пользователя
-    const { data: sessionData } = await supabase.auth.getSession();
-    const user = sessionData.session?.user;
-
-    console.log("USER:", user);
-
-    if (!user) {
-        alert("Brak aktywnej sesji!");
-        throw new Error("Brak użytkownika");
-    }
-
-    // 4. Загружаем смены
-    const { data: rows, error } = await supabase
-        .from("work_entries")
-        .select("*")
-        .eq("user_id", user.id)
-        .gte("date", dateFrom)
-        .lte("date", dateTo)
-        .order("date", { ascending: true });
-
-    if (error) {
-        console.error(error);
-        alert("Błąd pobierania danych!");
-    }
-
-    console.log("DATA:", rows);
-
-    // 5. Заполняем таблицу
-    const tbody = document.querySelector("#workTable tbody");
-    tbody.innerHTML = "";
-
-    let total = 0;
-
-    rows?.forEach(row => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${row.date}</td>
-            <td>${row.start_time?.slice(0,5) || ""}</td>
-            <td>${row.end_time?.slice(0,5) || ""}</td>
-            <td>${row.total_hours}</td>
-            <td>${row.place || ""}</td>
-            <td>${row.partner || ""}</td>
+                tr.innerHTML = `
+            <td>${r.date}</td>
+            <td>${r.start_time || ""}</td>
+            <td>${r.end_time || ""}</td>
+            <td>${hours}</td>
+            <td>${r.place || ""}</td>
+            <td>${r.partner || ""}</td>
         `;
-        tbody.appendChild(tr);
 
-        total += Number(row.total_hours);
-    });
+                tbody.appendChild(tr);
+                total += Number(hours);
+            });
 
-    document.getElementById("totalHours").textContent =
-        `Łącznie godzin: ${total.toFixed(2)}`;
-</script>
+            document.getElementById("totalHours").textContent =
+                `Łącznie godzin: ${total.toFixed(2)}`;
+        }
+    </script>
 
 </body>
+
 </html>

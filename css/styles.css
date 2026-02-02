@@ -1434,3 +1434,29 @@ body.dark .modal-close:hover {
     color: white;
     border-radius: 10px;
 }
+
+.pin-box {
+  max-width: 320px;
+  margin: 100px auto;
+  padding: 20px;
+  border-radius: 16px;
+  background: var(--card-bg, #fff);
+  box-shadow: 0 10px 30px rgba(0,0,0,.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pin-input {
+  padding: 10px;
+  font-size: 16px;
+}
+
+.pin-error {
+  color: red;
+  font-size: 14px;
+}
+
+.hidden {
+  display: none !important;
+}
